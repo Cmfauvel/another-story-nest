@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma, Story } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 
@@ -7,7 +7,22 @@ export class StoryService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.StoryCreateInput) {
-    return this.prisma.story.create({ data });
+    console.log(data);
+    let story: Story;
+    try {
+      story = await this.prisma.story.create({ data });
+      //vérifier que l'utilisateur existe/a les droits
+      return { storyId: story.id, code: 201, message: 'success' };
+    } catch (error) {
+      console.log(error);
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: 'cannot create story',
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   async findOne(

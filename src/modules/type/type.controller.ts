@@ -12,8 +12,8 @@ import { CreateTypeDto } from './dto/create-type.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@Controller('type')
-@ApiTags('types')
+@Controller('types')
+@ApiTags('Types')
 export class TypeController {
   constructor(private readonly typeService: TypeService) {}
 
@@ -24,7 +24,7 @@ export class TypeController {
 
   @Get()
   findAll() {
-    return this.typeService.findAll();
+    return this.typeService.findAll({});
   }
 
   @Get(':id')

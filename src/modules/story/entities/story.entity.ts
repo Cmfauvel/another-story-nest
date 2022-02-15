@@ -20,7 +20,7 @@ export class Story {
   type: Type;
 
   @ApiProperty()
-  typeName: string;
+  typeId: number;
 
   @ApiProperty()
   stars: number;

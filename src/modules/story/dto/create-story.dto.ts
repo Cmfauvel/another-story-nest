@@ -8,10 +8,7 @@ export class CreateStoryDto {
   resume: string;
 
   @ApiProperty()
-  typeName: string;
-
-  @ApiProperty()
-  stars: number;
+  typeId: number;
 
   @ApiProperty()
   authorId: string;

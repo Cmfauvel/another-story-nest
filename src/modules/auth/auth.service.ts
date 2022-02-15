@@ -75,6 +75,7 @@ export class AuthService {
       refreshTokenExpires: '',
     };
     try {
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       user = await this.prisma.user.create({
         data,

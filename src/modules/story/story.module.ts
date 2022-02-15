@@ -6,5 +6,6 @@ import { PrismaService } from '../../config/prisma/prisma.service';
 @Module({
   controllers: [StoryController],
   providers: [StoryService, PrismaService],
+  exports: [StoryService],
 })
 export class StoryModule {}

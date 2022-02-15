@@ -8,8 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { StoryService } from './story.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
+import { CreateStoryDto } from './dto/create-story.dto';
+import { Story } from './entities/story.entity';
 
 @ApiTags('Stories')
 @Controller('stories')
@@ -17,6 +19,10 @@ export class StoryController {
   constructor(private readonly storyService: StoryService) {}
 
   @Post()
+  @ApiBody({ type: CreateStoryDto })
+  //Parameters in swagger
+  @ApiOkResponse({ type: Story })
+  //type of response in swagger
   create(@Body() createStoryDto: Prisma.StoryCreateInput) {
     return this.storyService.create(createStoryDto);
   }
