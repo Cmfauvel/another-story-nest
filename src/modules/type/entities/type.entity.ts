@@ -3,7 +3,7 @@ import { Story } from '../../story/entities/story.entity';
 
 export class Type {
   @ApiProperty()
-  id: string;
+  id: number;
 
   @ApiProperty()
   name: string;

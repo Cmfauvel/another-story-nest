@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from '../../user/entities/user.entity';
+import { Type } from '../../type/entities/type.entity';
 
 export class CreateStoryDto {
   @ApiProperty()
@@ -8,11 +10,11 @@ export class CreateStoryDto {
   resume: string;
 
   @ApiProperty()
-  typeId: number;
-
-  @ApiProperty()
-  authorId: string;
-
-  @ApiProperty()
   isPublic: boolean;
+
+  @ApiProperty()
+  author: User;
+
+  @ApiProperty()
+  type: Type;
 }

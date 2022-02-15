@@ -11,6 +11,7 @@ import { ChapterService } from './chapter.service';
 import { CreateChapterDto } from './dto/create-chapter.dto';
 import { UpdateChapterDto } from './dto/update-chapter.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Story } from '../story/entities/story.entity';
 
 @ApiTags('chapter')
 @Controller('chapter')
@@ -18,8 +19,8 @@ export class ChapterController {
   constructor(private readonly chapterService: ChapterService) {}
 
   @Post()
-  create(@Body() createChapterDto: CreateChapterDto) {
-    return this.chapterService.create(createChapterDto);
+  create(@Body() createChapterDto: CreateChapterDto, story: Story) {
+    return this.chapterService.create(createChapterDto, story);
   }
 
   @Get()

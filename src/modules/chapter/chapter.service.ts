@@ -3,14 +3,24 @@ import { Chapter } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateChapterDto } from './dto/create-chapter.dto';
 import { UpdateChapterDto } from './dto/update-chapter.dto';
+import { Story } from '../story/entities/story.entity';
 
 @Injectable()
 export class ChapterService {
   constructor(private prisma: PrismaService) {}
-  async create(data: CreateChapterDto) {
+  async create(data: CreateChapterDto, story: Story) {
     let chapter: Chapter;
     try {
-      chapter = await this.prisma.chapter.create({ data });
+      chapter = await this.prisma.chapter.create({
+        data: {
+          ...data,
+          story: {
+            connect: {
+              id: story.id,
+            },
+          },
+        },
+      });
       //vérifier que l'utilisateur existe/a les droits
       return { chapterId: chapter.id, code: 201, message: 'success' };
     } catch (error) {

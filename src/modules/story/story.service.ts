@@ -1,16 +1,33 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma, Story } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
+import { Type } from '../type/entities/type.entity';
+import { CreateStoryDto } from './dto/create-story.dto';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class StoryService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: Prisma.StoryCreateInput) {
+  async create(data: CreateStoryDto, type: Type, user: User) {
     console.log(data);
     let story: Story;
     try {
-      story = await this.prisma.story.create({ data });
+      story = await this.prisma.story.create({
+        data: {
+          ...data,
+          type: {
+            connect: {
+              id: type.id,
+            },
+          },
+          author: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
       //vérifier que l'utilisateur existe/a les droits
       return { storyId: story.id, code: 201, message: 'success' };
     } catch (error) {

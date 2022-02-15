@@ -13,6 +13,8 @@ import { Prisma } from '@prisma/client';
 import { CreateStoryDto } from './dto/create-story.dto';
 import { Story } from './entities/story.entity';
 import { UpdateStoryDto } from './dto/update-story.dto';
+import { Type } from '../type/entities/type.entity';
+import { User } from '../user/entities/user.entity';
 
 @ApiTags('Stories')
 @Controller('stories')
@@ -24,8 +26,8 @@ export class StoryController {
   //Parameters in swagger
   @ApiOkResponse({ type: Story })
   //type of response in swagger
-  create(@Body() createStoryDto: Prisma.StoryCreateInput) {
-    return this.storyService.create(createStoryDto);
+  create(@Body() createStoryDto: CreateStoryDto, type: Type, user: User) {
+    return this.storyService.create(createStoryDto, type, user);
   }
 
   @Get('published')
