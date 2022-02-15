@@ -9,7 +9,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Auth } from './entities/auth.entity';
 import { compare } from 'bcryptjs';
 import { hash } from 'bcrypt';
-import * as crypto from 'crypto';
 import { LoginDto } from './dto/login.dto';
 import { Request } from 'express';
 import { PrismaService } from 'src/config/prisma/prisma.service';
@@ -51,16 +50,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid Login');
     }
 
-    const xsrfToken = crypto.randomBytes(64).toString('hex');
-    const payload = { sub: user.id, xsrfToken };
+    const payload = { sub: { userId: user.id, mail: email } };
 
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = await this.generateRefreshToken(user.id);
+    const refreshMethod = await this.generateRefreshToken(user.id);
 
     return {
       accessToken: accessToken,
-      refreshToken: refreshToken,
-      xsrfToken: xsrfToken,
+      refreshToken: refreshMethod.refreshToken,
+      expiresIn: refreshMethod.expiryDate,
     };
   }
 
@@ -75,7 +73,6 @@ export class AuthService {
       refreshTokenExpires: '',
     };
     try {
-      console.log(data);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       user = await this.prisma.user.create({
         data,
@@ -97,13 +94,15 @@ export class AuthService {
     const decodedToken: any = await this.jwtService.decode(refreshToken);
     return {
       accessToken: this.jwtService.sign({
-        role: decodedToken.role,
+        //role: decodedToken.role,
         sub: decodedToken.sub,
       }),
     };
   }
 
-  async generateRefreshToken(userId: string): Promise<string> {
+  async generateRefreshToken(
+    userId: string,
+  ): Promise<{ refreshToken: string; expiryDate: string }> {
     const payload = { sub: userId };
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 120);
@@ -115,7 +114,10 @@ export class AuthService {
       userId,
       expiryDate.getTime().toString(),
     );
-    return refreshToken;
+    return {
+      refreshToken: refreshToken,
+      expiryDate: expiryDate.getTime().toString(),
+    };
   }
 
   async saveOrUpdateRefreshToken(

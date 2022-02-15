@@ -1,11 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
+import { Chapter } from '@prisma/client';
+import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateChapterDto } from './dto/create-chapter.dto';
 import { UpdateChapterDto } from './dto/update-chapter.dto';
 
 @Injectable()
 export class ChapterService {
-  create(createChapterDto: CreateChapterDto) {
-    return 'This action adds a new chapter';
+  constructor(private prisma: PrismaService) {}
+  async create(data: CreateChapterDto) {
+    let chapter: Chapter;
+    try {
+      chapter = await this.prisma.chapter.create({ data });
+      //vérifier que l'utilisateur existe/a les droits
+      return { chapterId: chapter.id, code: 201, message: 'success' };
+    } catch (error) {
+      console.log(error);
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: 'cannot create story',
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   findAll() {

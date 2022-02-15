@@ -30,6 +30,6 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
     if (new Date() > new Date((await user).refreshTokenExpires)) {
       throw new UnauthorizedException();
     }
-    return { userId: payload.sub, username: payload.username };
+    return { userId: payload.sub.userId };
   }
 }

@@ -16,8 +16,7 @@ export class AuthController {
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { accessToken, refreshToken, xsrfToken } =
-      await this.authService.login(request);
+    const { accessToken, refreshToken } = await this.authService.login(request);
     response.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 5,
@@ -26,12 +25,12 @@ export class AuthController {
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 120,
-      //path: '/refreshtoken',
     });
     response.json({
+      accessToken,
       accessTokenExpiresIn: 1000 * 60 * 5,
+      refreshToken,
       refreshTokenExpiresIn: 1000 * 60 * 60 * 24 * 120,
-      xsrfToken,
     });
   }
 
@@ -57,7 +56,11 @@ export class AuthController {
   @Post('refreshtoken')
   @ApiOkResponse()
   async refreshToken(@Body() { refreshToken }: { refreshToken: string }) {
-    return this.authService.generateAccessToken(refreshToken);
+    return {
+      accessToken: this.authService.generateAccessToken(refreshToken),
+      refreshToken: refreshToken,
+      expiresIn: 1000 * 60 * 60 * 24 * 120,
+    };
   }
 
   /* @UseGuards(LocalAuthGuard)

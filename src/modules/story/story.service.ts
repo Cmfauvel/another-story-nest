@@ -53,12 +53,25 @@ export class StoryService {
   async update(params: {
     where: Prisma.StoryWhereUniqueInput;
     data: Prisma.StoryUpdateInput;
-  }): Promise<Story> {
-    const { data, where } = params;
-    return this.prisma.story.update({
-      data,
-      where,
-    });
+  }): Promise<any> {
+    try {
+      //this.prisma.chapter.create
+      const { data, where } = params;
+      this.prisma.story.update({
+        data,
+        where,
+      });
+      return { code: 201, message: 'success' };
+    } catch (error) {
+      console.log(error);
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: 'cannot update story',
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   async remove(where: Prisma.StoryWhereUniqueInput): Promise<Story> {

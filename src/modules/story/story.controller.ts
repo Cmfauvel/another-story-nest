@@ -12,6 +12,7 @@ import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { CreateStoryDto } from './dto/create-story.dto';
 import { Story } from './entities/story.entity';
+import { UpdateStoryDto } from './dto/update-story.dto';
 
 @ApiTags('Stories')
 @Controller('stories')
@@ -47,6 +48,9 @@ export class StoryController {
     return this.storyService.findOne({ id: id });
   }
 
+  @Post()
+  @ApiBody({ type: UpdateStoryDto })
+  @ApiOkResponse({ type: Story })
   @Patch(':id')
   update(
     @Param('id') id: string,

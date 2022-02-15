@@ -8,5 +8,5 @@ export class Auth {
   refreshToken: string;
 
   @ApiProperty()
-  xsrfToken: string;
+  expiresIn: string;
 }

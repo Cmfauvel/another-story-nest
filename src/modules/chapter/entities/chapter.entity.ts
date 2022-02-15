@@ -13,6 +13,12 @@ export class Chapter {
   content: string;
 
   @ApiProperty()
+  resume: string;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
   storyId: string;
 
   @ApiProperty()

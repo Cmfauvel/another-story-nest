@@ -6,4 +6,10 @@ export class CreateChapterDto {
 
   @ApiProperty()
   storyId: string;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  resume: string;
 }
