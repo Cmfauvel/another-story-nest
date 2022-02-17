@@ -9,12 +9,12 @@ import {
 } from '@nestjs/common';
 import { StoryService } from './story.service';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
 import { CreateStoryDto } from './dto/create-story.dto';
-import { Story } from './entities/story.entity';
 import { UpdateStoryDto } from './dto/update-story.dto';
 import { Type } from '../type/entities/type.entity';
 import { User } from '../user/entities/user.entity';
+import { Story } from './entities/story.entity';
+import { Prisma } from '@prisma/client';
 
 @ApiTags('Stories')
 @Controller('stories')
@@ -24,14 +24,21 @@ export class StoryController {
   @Post()
   @ApiBody({ type: CreateStoryDto })
   //Parameters in swagger
-  @ApiOkResponse({ type: Story })
+  @ApiOkResponse()
   //type of response in swagger
-  create(@Body() createStoryDto: CreateStoryDto, type: Type, user: User) {
-    return this.storyService.create(createStoryDto, type, user);
+  create(@Body() data: { story: CreateStoryDto; type: Type; user: User }) {
+    return this.storyService.create(data);
   }
 
-  @Get('published')
-  findAllPublicStories() {
+  @Get('author/:authorId')
+  @ApiOkResponse({ type: [Story] })
+  findStoriesByUser(@Param('authorId') authorId: string) {
+    return this.storyService.findAll({ where: { authorId: authorId } });
+  }
+
+  @Get('published-stories')
+  @ApiOkResponse({ type: [Story] })
+  findAllPublicStories(filters: any) {
     return this.storyService.findAll({ where: { isPublic: true } });
   }
 
@@ -46,7 +53,9 @@ export class StoryController {
   } */
 
   @Get(':id')
+  @ApiOkResponse({ type: Story })
   findOne(@Param('id') id: string) {
+    console.log(id);
     return this.storyService.findOne({ id: id });
   }
 

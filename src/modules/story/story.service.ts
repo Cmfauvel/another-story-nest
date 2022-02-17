@@ -9,21 +9,21 @@ import { User } from '../user/entities/user.entity';
 export class StoryService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateStoryDto, type: Type, user: User) {
+  async create(data: { story: CreateStoryDto; type: Type; user: User }) {
     console.log(data);
     let story: Story;
     try {
       story = await this.prisma.story.create({
         data: {
-          ...data,
+          ...data.story,
           type: {
             connect: {
-              id: type.id,
+              id: data.type.id,
             },
           },
           author: {
             connect: {
-              id: user.id,
+              id: data.user.id,
             },
           },
         },
@@ -42,13 +42,24 @@ export class StoryService {
     }
   }
 
-  async findOne(
+  findOne = async (
     storyWhereUniqueInput: Prisma.StoryWhereUniqueInput,
-  ): Promise<Story | null> {
-    return this.prisma.story.findUnique({
-      where: storyWhereUniqueInput,
-    });
-  }
+  ): Promise<Story | null> => {
+    try {
+      const story = await this.prisma.story.findUnique({
+        where: storyWhereUniqueInput,
+      });
+      return { ...story };
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: 'cannot create story',
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
+  };
 
   async findAll(params: {
     skip?: number;
@@ -57,6 +68,7 @@ export class StoryService {
     where?: Prisma.StoryWhereInput;
     orderBy?: Prisma.StoryOrderByInput;
   }): Promise<Story[]> {
+    console.log(params, 'here, in service');
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.story.findMany({
       skip,
