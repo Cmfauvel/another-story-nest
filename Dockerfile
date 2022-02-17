@@ -1,8 +1,30 @@
-FROM node:12.17.0-alpine
+#WORKDIR /usr/src/app
+#COPY package*.json ./
+#RUN npm install --only=production
+#COPY --from=0 /usr/src/dist ./build
+#EXPOSE 1000
+#CMD npm start
 
-WORKDIR /usr/src/app
+FROM node:12.17.0-alpine As builder
+# Create app directory
+WORKDIR /app
+
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
-RUN npm install --only=production
-COPY --from=0 /usr/src/app/dist ./build
-EXPOSE 8000
-CMD npm start
+COPY prisma ./prisma/
+
+# Install app dependencies
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+FROM node:14
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 1001
+CMD [ "npm", "run", "start:prod" ]

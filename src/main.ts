@@ -17,6 +17,6 @@ async function bootstrap() {
   app.use(cookieParser('zioin'));
   app.enableCors();
 
-  await app.listen(1000);
+  await app.listen(1001);
 }
 bootstrap();
