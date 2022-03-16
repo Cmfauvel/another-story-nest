@@ -11,6 +11,7 @@ import { CharacterService } from './character.service';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Story } from '../story/entities/story.entity';
 
 @ApiTags('character')
 @Controller('character')
@@ -18,8 +19,8 @@ export class CharacterController {
   constructor(private readonly characterService: CharacterService) {}
 
   @Post()
-  create(@Body() createCharacterDto: CreateCharacterDto) {
-    return this.characterService.create(createCharacterDto);
+  create(@Body() data: { character: CreateCharacterDto; story: Story }) {
+    return this.characterService.create(data);
   }
 
   @Get()

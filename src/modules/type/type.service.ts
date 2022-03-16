@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma, Type } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateTypeDto } from './dto/create-type.dto';
@@ -8,8 +8,20 @@ import { UpdateTypeDto } from './dto/update-type.dto';
 export class TypeService {
   constructor(private prisma: PrismaService) {}
 
-  create(createTypeDto: CreateTypeDto) {
-    return 'This action adds a new type';
+  async create(createTypeDto: CreateTypeDto) {
+    let type: Type;
+    try {
+      type = await this.prisma.type.create({ data: createTypeDto });
+      return { typeId: type.id, code: 201, message: 'success' };
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: 'cannot create type',
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   async findAll(params: {
@@ -17,7 +29,7 @@ export class TypeService {
     take?: number;
     cursor?: Prisma.TypeWhereUniqueInput;
     where?: Prisma.TypeWhereInput;
-    orderBy?: Prisma.TypeOrderByInput;
+    orderBy?: any;
   }): Promise<Type[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.type.findMany({

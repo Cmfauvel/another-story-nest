@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Chapter } from '../../chapter/entities/chapter.entity';
 
 export class CreateNoteDto {
   @ApiProperty()
   content: string;
 
   @ApiProperty()
-  chapterId: string;
+  chapter: Chapter;
 }

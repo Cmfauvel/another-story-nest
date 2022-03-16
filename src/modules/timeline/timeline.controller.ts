@@ -11,6 +11,7 @@ import { TimelineService } from './timeline.service';
 import { CreateTimelineDto } from './dto/create-timeline.dto';
 import { UpdateTimelineDto } from './dto/update-timeline.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Story } from '../story/entities/story.entity';
 
 @ApiTags('timeline')
 @Controller('timeline')
@@ -18,8 +19,8 @@ export class TimelineController {
   constructor(private readonly timelineService: TimelineService) {}
 
   @Post()
-  create(@Body() createTimelineDto: CreateTimelineDto) {
-    return this.timelineService.create(createTimelineDto);
+  create(@Body() data: { timeline: CreateTimelineDto; story: Story }) {
+    return this.timelineService.create(data);
   }
 
   @Get()

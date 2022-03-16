@@ -4,6 +4,8 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "refreshToken" TEXT NOT NULL,
+    "refreshTokenExpires" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -20,11 +22,11 @@ CREATE TABLE "Follows" (
 CREATE TABLE "Story" (
     "id" UUID NOT NULL,
     "title" TEXT NOT NULL,
-    "resume" TEXT NOT NULL,
-    "typeName" TEXT NOT NULL,
+    "resume" TEXT,
+    "typeId" INTEGER,
     "isPublic" BOOLEAN NOT NULL,
     "authorId" UUID NOT NULL,
-    "stars" INTEGER NOT NULL,
+    "stars" INTEGER,
 
     CONSTRAINT "Story_pkey" PRIMARY KEY ("id")
 );
@@ -48,7 +50,8 @@ CREATE TABLE "Category" (
 -- CreateTable
 CREATE TABLE "Chapter" (
     "id" UUID NOT NULL,
-    "resume" TEXT NOT NULL,
+    "resume" TEXT,
+    "title" TEXT,
     "content" TEXT NOT NULL,
     "storyId" UUID NOT NULL,
 
@@ -170,7 +173,7 @@ ALTER TABLE "Follows" ADD CONSTRAINT "Follows_followerId_fkey" FOREIGN KEY ("fol
 ALTER TABLE "Follows" ADD CONSTRAINT "Follows_followingId_fkey" FOREIGN KEY ("followingId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Story" ADD CONSTRAINT "Story_typeName_fkey" FOREIGN KEY ("typeName") REFERENCES "Type"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Story" ADD CONSTRAINT "Story_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "Type"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Story" ADD CONSTRAINT "Story_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

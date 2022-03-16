@@ -8,9 +8,9 @@ import {
   Delete,
 } from '@nestjs/common';
 import { FollowsService } from './follows.service';
-import { CreateFollowDto } from './dto/create-follow.dto';
 import { UpdateFollowDto } from './dto/update-follow.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { User } from '../user/entities/user.entity';
 
 @ApiTags('Follows')
 @Controller('follows')
@@ -18,8 +18,8 @@ export class FollowsController {
   constructor(private readonly followsService: FollowsService) {}
 
   @Post()
-  create(@Body() createFollowDto: CreateFollowDto) {
-    return this.followsService.create(createFollowDto);
+  create(@Body() data: { follower: User; following: User }) {
+    return this.followsService.create(data);
   }
 
   @Get()

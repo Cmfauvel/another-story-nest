@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Story" ALTER COLUMN "resume" DROP NOT NULL,
-ALTER COLUMN "typeId" DROP NOT NULL;

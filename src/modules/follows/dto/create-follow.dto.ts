@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from 'src/modules/user/entities/user.entity';
 
 export class CreateFollowDto {
   @ApiProperty()
-  followerId: string;
+  follower: User;
 
   @ApiProperty()
-  followingId: string;
+  following: User;
 }

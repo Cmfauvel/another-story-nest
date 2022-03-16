@@ -11,6 +11,7 @@ import { NoteService } from './note.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Chapter } from '../chapter/entities/chapter.entity';
 
 @ApiTags('note')
 @Controller('note')
@@ -18,8 +19,8 @@ export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto) {
-    return this.noteService.create(createNoteDto);
+  create(@Body() data: { note: CreateNoteDto; chapter: Chapter }) {
+    return this.noteService.create(data);
   }
 
   @Get()

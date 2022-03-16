@@ -66,7 +66,7 @@ export class StoryService {
     take?: number;
     cursor?: Prisma.StoryWhereUniqueInput;
     where?: Prisma.StoryWhereInput;
-    orderBy?: Prisma.StoryOrderByInput;
+    orderBy?: any;
   }): Promise<Story[]> {
     console.log(params, 'here, in service');
     const { skip, take, cursor, where, orderBy } = params;

@@ -11,6 +11,8 @@ import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Chapter } from '../chapter/entities/chapter.entity';
+import { User } from '../user/entities/user.entity';
 
 @ApiTags('comment')
 @Controller('comment')
@@ -18,8 +20,10 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  create(
+    @Body() data: { comment: CreateCommentDto; chapter: Chapter; user: User },
+  ) {
+    return this.commentService.create(data);
   }
 
   @Get()

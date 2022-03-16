@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  //previewFeatures = ["orderByAggregateGroup", "selectRelationCount", "referentialActions"]
 }
 
 datasource db {
@@ -37,7 +36,7 @@ model Story {
   resume     String?
   typeId     Int?
   type       Type?       @relation(fields: [typeId], references: [id])
-  isPublic   Boolean
+  isPublic   Boolean      @default(false)
   authorId   String      @db.Uuid
   stars      Int?
   categories Category[]
@@ -49,7 +48,7 @@ model Story {
 }
 
 model Type {
-  id      Int     @id
+  id      Int     @id @default(autoincrement())
   name    String  @unique
   stories Story[]
 }

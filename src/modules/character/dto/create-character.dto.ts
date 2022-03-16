@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Story } from '../../story/entities/story.entity';
 
 export class CreateCharacterDto {
   @ApiProperty()
@@ -11,5 +12,5 @@ export class CreateCharacterDto {
   distinctiveSigns: string;
 
   @ApiProperty()
-  storyId: string;
+  story: Story;
 }

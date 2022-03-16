@@ -11,7 +11,9 @@ describe('ResponseToCommentController', () => {
       providers: [ResponseToCommentService],
     }).compile();
 
-    controller = module.get<ResponseToCommentController>(ResponseToCommentController);
+    controller = module.get<ResponseToCommentController>(
+      ResponseToCommentController,
+    );
   });
 
   it('should be defined', () => {

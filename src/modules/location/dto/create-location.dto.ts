@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Story } from 'src/modules/story/entities/story.entity';
 
 export class CreateLocationDto {
   @ApiProperty()
@@ -8,5 +9,5 @@ export class CreateLocationDto {
   description: string;
 
   @ApiProperty()
-  storyId: string;
+  story: Story;
 }
