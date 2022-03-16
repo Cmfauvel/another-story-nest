@@ -11,6 +11,7 @@ import { TypeService } from './type.service';
 import { CreateTypeDto } from './dto/create-type.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Params } from 'src/helpers/models/filters';
 
 @Controller('types')
 @ApiTags('Types')
@@ -23,13 +24,13 @@ export class TypeController {
   }
 
   @Get()
-  findAll() {
-    return this.typeService.findAll({});
+  findAll(params: Params) {
+    return this.typeService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.typeService.findOne(+id);
+    return this.typeService.findAll({ where: { id: id } });
   }
 
   @Patch(':id')

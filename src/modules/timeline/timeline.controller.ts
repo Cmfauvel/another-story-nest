@@ -12,6 +12,7 @@ import { CreateTimelineDto } from './dto/create-timeline.dto';
 import { UpdateTimelineDto } from './dto/update-timeline.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Story } from '../story/entities/story.entity';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('timeline')
 @Controller('timeline')
@@ -24,13 +25,13 @@ export class TimelineController {
   }
 
   @Get()
-  findAll() {
-    return this.timelineService.findAll();
+  findAll(params: Params) {
+    return this.timelineService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.timelineService.findOne(+id);
+    return this.timelineService.findAll({ where: { id: id } });
   }
 
   @Patch(':id')

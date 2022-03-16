@@ -12,6 +12,7 @@ import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Story } from '../story/entities/story.entity';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('character')
 @Controller('character')
@@ -24,13 +25,13 @@ export class CharacterController {
   }
 
   @Get()
-  findAll() {
-    return this.characterService.findAll();
+  findAll(params: Params) {
+    return this.characterService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.characterService.findOne(+id);
+    return this.characterService.findAll({ where: { id: id } });
   }
 
   @Patch(':id')

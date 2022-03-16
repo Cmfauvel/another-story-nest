@@ -3,7 +3,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
 import { Story } from '../story/entities/story.entity';
-import { Character } from '@prisma/client';
+import { Character, Prisma } from '@prisma/client';
 
 @Injectable()
 export class CharacterService {
@@ -37,12 +37,21 @@ export class CharacterService {
     }
   }
 
-  findAll() {
-    return `This action returns all character`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} character`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.CharacterWhereUniqueInput;
+    where?: Prisma.CharacterWhereInput;
+    orderBy?: any;
+  }): Promise<Character[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.character.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   update(id: number, updateCharacterDto: UpdateCharacterDto) {

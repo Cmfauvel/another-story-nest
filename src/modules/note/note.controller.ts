@@ -12,6 +12,7 @@ import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Chapter } from '../chapter/entities/chapter.entity';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('note')
 @Controller('note')
@@ -24,13 +25,13 @@ export class NoteController {
   }
 
   @Get()
-  findAll() {
-    return this.noteService.findAll();
+  findAll(params: Params) {
+    return this.noteService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.noteService.findOne(+id);
+    return this.noteService.findAll({ where: { id: id } });
   }
 
   @Patch(':id')

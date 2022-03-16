@@ -12,6 +12,7 @@ import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Story } from '../story/entities/story.entity';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('location')
 @Controller('location')
@@ -24,13 +25,13 @@ export class LocationController {
   }
 
   @Get()
-  findAll() {
-    return this.locationService.findAll();
+  findAll(params: Params) {
+    return this.locationService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.locationService.findOne(+id);
+    return this.locationService.findAll({ where: { id: id } });
   }
 
   @Patch(':id')

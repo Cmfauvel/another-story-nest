@@ -12,6 +12,7 @@ import { CreateChapterDto } from './dto/create-chapter.dto';
 import { UpdateChapterDto } from './dto/update-chapter.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Story } from '../story/entities/story.entity';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('chapter')
 @Controller('chapter')
@@ -24,13 +25,13 @@ export class ChapterController {
   }
 
   @Get()
-  findAll() {
-    return this.chapterService.findAll();
+  findAll(params: Params) {
+    return this.chapterService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.chapterService.findOne(+id);
+    return this.chapterService.findAll({ where: { id: id } });
   }
 
   @Patch(':id')

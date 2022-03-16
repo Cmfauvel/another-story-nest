@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Comment, User } from '@prisma/client';
+import { Comment, Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -46,12 +46,21 @@ export class CommentService {
     }
   }
 
-  findAll() {
-    return `This action returns all comment`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.CommentWhereUniqueInput;
+    where?: Prisma.CommentWhereInput;
+    orderBy?: any;
+  }): Promise<Comment[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.comment.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   update(id: number, updateCommentDto: UpdateCommentDto) {

@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Chapter } from '@prisma/client';
+import { Chapter, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateChapterDto } from './dto/create-chapter.dto';
 import { UpdateChapterDto } from './dto/update-chapter.dto';
@@ -35,12 +35,21 @@ export class ChapterService {
     }
   }
 
-  findAll() {
-    return `This action returns all chapter`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} chapter`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ChapterWhereUniqueInput;
+    where?: Prisma.ChapterWhereInput;
+    orderBy?: any;
+  }): Promise<Chapter[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.chapter.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   update(id: number, updateChapterDto: UpdateChapterDto) {

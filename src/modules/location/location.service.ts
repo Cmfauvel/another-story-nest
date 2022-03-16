@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Location } from '@prisma/client';
+import { Location, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { Story } from '../story/entities/story.entity';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -37,14 +37,22 @@ export class LocationService {
     }
   }
 
-  findAll() {
-    return `This action returns all location`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.LocationWhereUniqueInput;
+    where?: Prisma.LocationWhereInput;
+    orderBy?: any;
+  }): Promise<Location[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.location.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} location`;
-  }
-
   update(id: number, updateLocationDto: UpdateLocationDto) {
     return `This action updates a #${id} location`;
   }

@@ -11,6 +11,7 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('category')
 @Controller('category')
@@ -23,13 +24,13 @@ export class CategoryController {
   }
 
   @Get()
-  findAll() {
-    return this.categoryService.findAll();
+  findAll(params: Params) {
+    return this.categoryService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+    return this.categoryService.findAll({ where: { id: id } });
   }
 
   @Patch(':id')

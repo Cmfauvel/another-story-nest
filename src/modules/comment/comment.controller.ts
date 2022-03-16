@@ -13,6 +13,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Chapter } from '../chapter/entities/chapter.entity';
 import { User } from '../user/entities/user.entity';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('comment')
 @Controller('comment')
@@ -27,13 +28,13 @@ export class CommentController {
   }
 
   @Get()
-  findAll() {
-    return this.commentService.findAll();
+  findAll(params: Params) {
+    return this.commentService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+    return this.commentService.findAll({ where: { id: id } });
   }
 
   @Patch(':id')

@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Follows } from '@prisma/client';
+import { Follows, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { User } from '../user/entities/user.entity';
 import { UpdateFollowDto } from './dto/update-follow.dto';
@@ -43,12 +43,21 @@ export class FollowsService {
     }
   }
 
-  findAll() {
-    return `This action returns all follows`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} follow`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.FollowsWhereUniqueInput;
+    where?: Prisma.FollowsWhereInput;
+    orderBy?: any;
+  }): Promise<Follows[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.follows.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   update(id: number, updateFollowDto: UpdateFollowDto) {

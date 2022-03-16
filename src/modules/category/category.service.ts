@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Category } from '@prisma/client';
+import { Category, Prisma } from '@prisma/client';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from '../../config/prisma/prisma.service';
@@ -29,12 +29,21 @@ export class CategoryService {
     }
   }
 
-  findAll() {
-    return `This action returns all category`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.CategoryWhereUniqueInput;
+    where?: Prisma.CategoryWhereInput;
+    orderBy?: any;
+  }): Promise<Category[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.category.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {

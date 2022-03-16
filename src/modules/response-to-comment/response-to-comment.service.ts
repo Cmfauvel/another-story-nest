@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { ResponseToComment } from '@prisma/client';
+import { Prisma, ResponseToComment } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { Comment } from '../comment/entities/comment.entity';
 import { User } from '../user/entities/user.entity';
@@ -47,12 +47,21 @@ export class ResponseToCommentService {
     }
   }
 
-  findAll() {
-    return `This action returns all responseToComment`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} responseToComment`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ResponseToCommentWhereUniqueInput;
+    where?: Prisma.ResponseToCommentWhereInput;
+    orderBy?: any;
+  }): Promise<ResponseToComment[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.responseToComment.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   update(id: number, updateResponseToCommentDto: UpdateResponseToCommentDto) {

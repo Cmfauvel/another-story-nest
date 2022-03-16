@@ -3,7 +3,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { Chapter } from '../chapter/entities/chapter.entity';
-import { Note } from '@prisma/client';
+import { Note, Prisma } from '@prisma/client';
 
 @Injectable()
 export class NoteService {
@@ -37,12 +37,21 @@ export class NoteService {
     }
   }
 
-  findAll() {
-    return `This action returns all note`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} note`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.NoteWhereUniqueInput;
+    where?: Prisma.NoteWhereInput;
+    orderBy?: any;
+  }): Promise<Note[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.note.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   update(id: number, updateNoteDto: UpdateNoteDto) {

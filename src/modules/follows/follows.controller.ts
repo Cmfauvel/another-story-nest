@@ -11,6 +11,7 @@ import { FollowsService } from './follows.service';
 import { UpdateFollowDto } from './dto/update-follow.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '../user/entities/user.entity';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('Follows')
 @Controller('follows')
@@ -23,13 +24,8 @@ export class FollowsController {
   }
 
   @Get()
-  findAll() {
-    return this.followsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.followsService.findOne(+id);
+  findAll(params: Params) {
+    return this.followsService.findAll(params);
   }
 
   @Patch(':id')

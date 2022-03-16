@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Timeline } from '@prisma/client';
+import { Prisma, Timeline } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { Story } from '../story/entities/story.entity';
 import { CreateTimelineDto } from './dto/create-timeline.dto';
@@ -37,12 +37,21 @@ export class TimelineService {
     }
   }
 
-  findAll() {
-    return `This action returns all timeline`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} timeline`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.TimelineWhereUniqueInput;
+    where?: Prisma.TimelineWhereInput;
+    orderBy?: any;
+  }): Promise<Timeline[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.timeline.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   update(id: number, updateTimelineDto: UpdateTimelineDto) {

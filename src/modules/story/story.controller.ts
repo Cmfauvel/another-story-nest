@@ -15,6 +15,7 @@ import { Type } from '../type/entities/type.entity';
 import { User } from '../user/entities/user.entity';
 import { Story } from './entities/story.entity';
 import { Prisma } from '@prisma/client';
+import { Params } from 'src/helpers/models/filters';
 
 @ApiTags('Stories')
 @Controller('stories')
@@ -52,11 +53,21 @@ export class StoryController {
     return this.storyService.findAll({ orderBy: { createdDate }, take: 15 });
   } */
 
-  @Get(':id')
+  /* @Get(':id')
   @ApiOkResponse({ type: Story })
   findOne(@Param('id') id: string) {
     console.log(id);
     return this.storyService.findOne({ id: id });
+  } */
+
+  @Get()
+  findAll(params: Params) {
+    return this.storyService.findAll(params);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.storyService.findAll({ where: { id: id } });
   }
 
   @Post()

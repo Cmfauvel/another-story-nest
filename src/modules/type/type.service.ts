@@ -1,6 +1,7 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma, Type } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
+import { Params } from 'src/helpers/models/filters';
 import { CreateTypeDto } from './dto/create-type.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
 
@@ -24,13 +25,7 @@ export class TypeService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.TypeWhereUniqueInput;
-    where?: Prisma.TypeWhereInput;
-    orderBy?: any;
-  }): Promise<Type[]> {
+  async findAll(params: Params): Promise<Type[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.type.findMany({
       skip,
@@ -41,9 +36,9 @@ export class TypeService {
     });
   }
 
-  findOne(id: number) {
+  /* findOne(id: number) {
     return `This action returns a #${id} type`;
-  }
+  } */
 
   update(id: number, updateTypeDto: UpdateTypeDto) {
     return `This action updates a #${id} type`;
