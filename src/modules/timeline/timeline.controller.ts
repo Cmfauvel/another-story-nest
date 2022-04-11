@@ -24,8 +24,8 @@ export class TimelineController {
     return this.timelineService.create(data);
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.timelineService.findAll(params);
   }
 

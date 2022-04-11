@@ -8,15 +8,15 @@ import { Story } from '../story/entities/story.entity';
 @Injectable()
 export class ChapterService {
   constructor(private prisma: PrismaService) {}
-  async create(data: CreateChapterDto, story: Story) {
+  async create(data: { chapter: CreateChapterDto; story: Story }) {
     let chapter: Chapter;
     try {
       chapter = await this.prisma.chapter.create({
         data: {
-          ...data,
+          ...data.chapter,
           story: {
             connect: {
-              id: story.id,
+              id: data.story.id,
             },
           },
         },

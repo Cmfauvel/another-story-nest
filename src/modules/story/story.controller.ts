@@ -60,14 +60,14 @@ export class StoryController {
     return this.storyService.findOne({ id: id });
   } */
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.storyService.findAll(params);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.storyService.findAll({ where: { id: id } });
+    return this.storyService.findOne({ id: id });
   }
 
   @Post()

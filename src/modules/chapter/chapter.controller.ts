@@ -20,12 +20,12 @@ export class ChapterController {
   constructor(private readonly chapterService: ChapterService) {}
 
   @Post()
-  create(@Body() createChapterDto: CreateChapterDto, story: Story) {
-    return this.chapterService.create(createChapterDto, story);
+  create(@Body() data: { chapter: CreateChapterDto; story: Story }) {
+    return this.chapterService.create(data);
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.chapterService.findAll(params);
   }
 

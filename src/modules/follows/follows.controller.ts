@@ -23,8 +23,8 @@ export class FollowsController {
     return this.followsService.create(data);
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.followsService.findAll(params);
   }
 

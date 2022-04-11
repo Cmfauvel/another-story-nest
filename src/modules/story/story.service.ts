@@ -48,6 +48,9 @@ export class StoryService {
     try {
       const story = await this.prisma.story.findUnique({
         where: storyWhereUniqueInput,
+        include: {
+          chapters: true,
+        },
       });
       return { ...story };
     } catch (error) {

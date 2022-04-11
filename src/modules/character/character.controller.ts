@@ -24,8 +24,8 @@ export class CharacterController {
     return this.characterService.create(data);
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.characterService.findAll(params);
   }
 

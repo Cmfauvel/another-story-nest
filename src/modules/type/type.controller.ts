@@ -6,17 +6,22 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TypeService } from './type.service';
 import { CreateTypeDto } from './dto/create-type.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Params } from 'src/helpers/models/filters';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @Controller('types')
 @ApiTags('Types')
 export class TypeController {
-  constructor(private readonly typeService: TypeService) {}
+  constructor(
+    private readonly typeService: TypeService,
+    private filtersService: FiltersService,
+  ) {}
 
   @Post()
   create(@Body() createTypeDto: CreateTypeDto) {
@@ -24,13 +29,15 @@ export class TypeController {
   }
 
   @Get()
-  findAll(params: Params) {
-    return this.typeService.findAll(params);
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.typeService.findAll(parseFilters);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.typeService.findAll({ where: { id: id } });
+    const numberId = parseInt(id);
+    return this.typeService.findAll({ filters: { where: { id: numberId } } });
   }
 
   @Patch(':id')

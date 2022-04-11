@@ -21,6 +21,7 @@ import {
   utilities as nestWinstonModuleUtilities,
 } from 'nest-winston';
 import * as winston from 'winston';
+import { FiltersMiddleware } from './middlewares/filters.middleware';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -66,6 +67,6 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RefreshTokenMiddleware).forRoutes('*');
+    consumer.apply(RefreshTokenMiddleware, FiltersMiddleware).forRoutes('*');
   }
 }

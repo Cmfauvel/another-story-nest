@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma, Type } from '@prisma/client';
+import { Type } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { Params } from 'src/helpers/models/filters';
 import { CreateTypeDto } from './dto/create-type.dto';
@@ -26,7 +26,7 @@ export class TypeService {
   }
 
   async findAll(params: Params): Promise<Type[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.type.findMany({
       skip,
       take,

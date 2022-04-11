@@ -34,8 +34,8 @@ export class ResponseToCommentController {
     return this.responseToCommentService.create(data);
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.responseToCommentService.findAll(params);
   }
 

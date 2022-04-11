@@ -24,8 +24,8 @@ export class NoteController {
     return this.noteService.create(data);
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.noteService.findAll(params);
   }
 

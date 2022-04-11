@@ -24,8 +24,8 @@ export class LocationController {
     return this.locationService.create(data);
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.locationService.findAll(params);
   }
 

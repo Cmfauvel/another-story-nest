@@ -23,8 +23,8 @@ export class CategoryController {
     return this.categoryService.create({ category: createCategoryDto });
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.categoryService.findAll(params);
   }
 

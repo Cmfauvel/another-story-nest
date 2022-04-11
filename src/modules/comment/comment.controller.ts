@@ -27,8 +27,8 @@ export class CommentController {
     return this.commentService.create(data);
   }
 
-  @Get()
-  findAll(params: Params) {
+  @Get(':params')
+  findAll(@Param('params') params: Params) {
     return this.commentService.findAll(params);
   }
 
