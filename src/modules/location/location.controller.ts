@@ -6,32 +6,37 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Story } from '../story/entities/story.entity';
-import { Params } from 'src/helpers/models/filters';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @ApiTags('location')
 @Controller('location')
 export class LocationController {
-  constructor(private readonly locationService: LocationService) {}
+  constructor(
+    private readonly locationService: LocationService,
+    private filtersService: FiltersService,
+  ) {}
 
   @Post()
   create(@Body() data: { location: CreateLocationDto; story: Story }) {
     return this.locationService.create(data);
   }
 
-  @Get(':params')
-  findAll(@Param('params') params: Params) {
-    return this.locationService.findAll(params);
+  @Get()
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.locationService.findAll(parseFilters);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.locationService.findAll({ where: { id: id } });
+    return this.locationService.findAll({ filters: { where: { id: id } } });
   }
 
   @Patch(':id')

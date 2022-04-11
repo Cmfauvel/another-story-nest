@@ -6,31 +6,36 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { Params } from 'src/helpers/models/filters';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @ApiTags('category')
 @Controller('category')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(
+    private readonly categoryService: CategoryService,
+    private filtersService: FiltersService,
+  ) {}
 
   @Post()
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create({ category: createCategoryDto });
   }
 
-  @Get(':params')
-  findAll(@Param('params') params: Params) {
-    return this.categoryService.findAll(params);
+  @Get()
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.categoryService.findAll(parseFilters);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.categoryService.findAll({ where: { id: id } });
+    return this.categoryService.findAll({ filters: { where: { id: id } } });
   }
 
   @Patch(':id')

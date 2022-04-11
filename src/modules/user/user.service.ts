@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class UserService {
@@ -15,14 +16,8 @@ export class UserService {
     });
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.UserWhereUniqueInput;
-    where?: Prisma.UserWhereInput;
-    orderBy?: any;
-  }): Promise<User[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<User[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.user.findMany({
       skip,
       take,

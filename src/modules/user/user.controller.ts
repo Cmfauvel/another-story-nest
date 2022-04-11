@@ -1,15 +1,28 @@
-import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @ApiTags('users')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService,
+    private filtersService: FiltersService,
+  ) {}
+
   @Get()
-  findAll() {
-    return this.userService.findAll({});
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.userService.findAll(parseFilters);
   }
 
   @Get(':id')

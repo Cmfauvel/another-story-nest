@@ -5,6 +5,7 @@ import { Comment } from '../comment/entities/comment.entity';
 import { User } from '../user/entities/user.entity';
 import { CreateResponseToCommentDto } from './dto/create-response-to-comment.dto';
 import { UpdateResponseToCommentDto } from './dto/update-response-to-comment.dto';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class ResponseToCommentService {
@@ -47,14 +48,8 @@ export class ResponseToCommentService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ResponseToCommentWhereUniqueInput;
-    where?: Prisma.ResponseToCommentWhereInput;
-    orderBy?: any;
-  }): Promise<ResponseToComment[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<ResponseToComment[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.responseToComment.findMany({
       skip,
       take,

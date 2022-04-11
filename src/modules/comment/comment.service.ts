@@ -4,6 +4,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Chapter } from '../chapter/entities/chapter.entity';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class CommentService {
@@ -46,14 +47,8 @@ export class CommentService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.CommentWhereUniqueInput;
-    where?: Prisma.CommentWhereInput;
-    orderBy?: any;
-  }): Promise<Comment[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<Comment[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.comment.findMany({
       skip,
       take,

@@ -6,32 +6,35 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { NoteService } from './note.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Chapter } from '../chapter/entities/chapter.entity';
-import { Params } from 'src/helpers/models/filters';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @ApiTags('note')
 @Controller('note')
 export class NoteController {
-  constructor(private readonly noteService: NoteService) {}
+  constructor(private readonly noteService: NoteService,
+    private filtersService: FiltersService) {}
 
   @Post()
   create(@Body() data: { note: CreateNoteDto; chapter: Chapter }) {
     return this.noteService.create(data);
   }
 
-  @Get(':params')
-  findAll(@Param('params') params: Params) {
-    return this.noteService.findAll(params);
+  @Get()
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.noteService.findAll(parseFilters);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.noteService.findAll({ where: { id: id } });
+    return this.noteService.findAll({ filters: { where: { id: id } } });
   }
 
   @Patch(':id')

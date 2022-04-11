@@ -4,6 +4,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 import { Story } from '../story/entities/story.entity';
 import { CreateTimelineDto } from './dto/create-timeline.dto';
 import { UpdateTimelineDto } from './dto/update-timeline.dto';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class TimelineService {
@@ -37,14 +38,8 @@ export class TimelineService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.TimelineWhereUniqueInput;
-    where?: Prisma.TimelineWhereInput;
-    orderBy?: any;
-  }): Promise<Timeline[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<Timeline[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.timeline.findMany({
       skip,
       take,

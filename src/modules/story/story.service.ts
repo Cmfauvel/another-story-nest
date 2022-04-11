@@ -4,6 +4,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 import { Type } from '../type/entities/type.entity';
 import { CreateStoryDto } from './dto/create-story.dto';
 import { User } from '../user/entities/user.entity';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class StoryService {
@@ -64,15 +65,9 @@ export class StoryService {
     }
   };
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.StoryWhereUniqueInput;
-    where?: Prisma.StoryWhereInput;
-    orderBy?: any;
-  }): Promise<Story[]> {
+  async findAll(params: Params): Promise<Story[]> {
     console.log(params, 'here, in service');
-    const { skip, take, cursor, where, orderBy } = params;
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.story.findMany({
       skip,
       take,

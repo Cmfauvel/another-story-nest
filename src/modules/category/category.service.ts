@@ -3,6 +3,7 @@ import { Category, Prisma } from '@prisma/client';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from '../../config/prisma/prisma.service';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class CategoryService {
@@ -29,14 +30,8 @@ export class CategoryService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.CategoryWhereUniqueInput;
-    where?: Prisma.CategoryWhereInput;
-    orderBy?: any;
-  }): Promise<Category[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<Category[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.category.findMany({
       skip,
       take,

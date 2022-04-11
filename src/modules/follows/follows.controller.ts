@@ -6,26 +6,31 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { FollowsService } from './follows.service';
 import { UpdateFollowDto } from './dto/update-follow.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '../user/entities/user.entity';
-import { Params } from 'src/helpers/models/filters';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @ApiTags('Follows')
 @Controller('follows')
 export class FollowsController {
-  constructor(private readonly followsService: FollowsService) {}
+  constructor(
+    private readonly followsService: FollowsService,
+    private filtersService: FiltersService,
+  ) {}
 
   @Post()
   create(@Body() data: { follower: User; following: User }) {
     return this.followsService.create(data);
   }
 
-  @Get(':params')
-  findAll(@Param('params') params: Params) {
-    return this.followsService.findAll(params);
+  @Get()
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.followsService.findAll(parseFilters);
   }
 
   @Patch(':id')

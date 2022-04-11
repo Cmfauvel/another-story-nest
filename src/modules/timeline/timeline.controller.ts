@@ -6,32 +6,37 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TimelineService } from './timeline.service';
 import { CreateTimelineDto } from './dto/create-timeline.dto';
 import { UpdateTimelineDto } from './dto/update-timeline.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Story } from '../story/entities/story.entity';
-import { Params } from 'src/helpers/models/filters';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @ApiTags('timeline')
 @Controller('timeline')
 export class TimelineController {
-  constructor(private readonly timelineService: TimelineService) {}
+  constructor(
+    private readonly timelineService: TimelineService,
+    private filtersService: FiltersService,
+  ) {}
 
   @Post()
   create(@Body() data: { timeline: CreateTimelineDto; story: Story }) {
     return this.timelineService.create(data);
   }
 
-  @Get(':params')
-  findAll(@Param('params') params: Params) {
-    return this.timelineService.findAll(params);
+  @Get()
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.timelineService.findAll(parseFilters);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.timelineService.findAll({ where: { id: id } });
+    return this.timelineService.findAll({ filters: { where: { id: id } } });
   }
 
   @Patch(':id')

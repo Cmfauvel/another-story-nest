@@ -6,32 +6,37 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CharacterService } from './character.service';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Story } from '../story/entities/story.entity';
-import { Params } from 'src/helpers/models/filters';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @ApiTags('character')
 @Controller('character')
 export class CharacterController {
-  constructor(private readonly characterService: CharacterService) {}
+  constructor(
+    private readonly characterService: CharacterService,
+    private filtersService: FiltersService,
+  ) {}
 
   @Post()
   create(@Body() data: { character: CreateCharacterDto; story: Story }) {
     return this.characterService.create(data);
   }
 
-  @Get(':params')
-  findAll(@Param('params') params: Params) {
-    return this.characterService.findAll(params);
+  @Get()
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.characterService.findAll(parseFilters);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.characterService.findAll({ where: { id: id } });
+    return this.characterService.findAll({ filters: { where: { id: id } } });
   }
 
   @Patch(':id')

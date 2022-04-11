@@ -3,6 +3,7 @@ import { Follows, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { User } from '../user/entities/user.entity';
 import { UpdateFollowDto } from './dto/update-follow.dto';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class FollowsService {
@@ -43,14 +44,8 @@ export class FollowsService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.FollowsWhereUniqueInput;
-    where?: Prisma.FollowsWhereInput;
-    orderBy?: any;
-  }): Promise<Follows[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<Follows[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.follows.findMany({
       skip,
       take,

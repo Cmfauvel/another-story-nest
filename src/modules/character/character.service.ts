@@ -3,7 +3,8 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
 import { Story } from '../story/entities/story.entity';
-import { Character, Prisma } from '@prisma/client';
+import { Character } from '@prisma/client';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class CharacterService {
@@ -37,14 +38,8 @@ export class CharacterService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.CharacterWhereUniqueInput;
-    where?: Prisma.CharacterWhereInput;
-    orderBy?: any;
-  }): Promise<Character[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<Character[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.character.findMany({
       skip,
       take,

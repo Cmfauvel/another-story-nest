@@ -4,6 +4,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 import { Story } from '../story/entities/story.entity';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class LocationService {
@@ -37,14 +38,8 @@ export class LocationService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.LocationWhereUniqueInput;
-    where?: Prisma.LocationWhereInput;
-    orderBy?: any;
-  }): Promise<Location[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<Location[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.location.findMany({
       skip,
       take,

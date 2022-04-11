@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { StoryService } from './story.service';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -15,12 +16,15 @@ import { Type } from '../type/entities/type.entity';
 import { User } from '../user/entities/user.entity';
 import { Story } from './entities/story.entity';
 import { Prisma } from '@prisma/client';
-import { Params } from 'src/helpers/models/filters';
+import { FiltersService } from '../../helpers/services/filters.service';
 
 @ApiTags('Stories')
 @Controller('stories')
 export class StoryController {
-  constructor(private readonly storyService: StoryService) {}
+  constructor(
+    private readonly storyService: StoryService,
+    private filtersService: FiltersService,
+  ) {}
 
   @Post()
   @ApiBody({ type: CreateStoryDto })
@@ -31,7 +35,7 @@ export class StoryController {
     return this.storyService.create(data);
   }
 
-  @Get('author/:authorId')
+  /*  @Get('author/:authorId')
   @ApiOkResponse({ type: [Story] })
   findStoriesByUser(@Param('authorId') authorId: string) {
     return this.storyService.findAll({ where: { authorId: authorId } });
@@ -41,7 +45,7 @@ export class StoryController {
   @ApiOkResponse({ type: [Story] })
   findAllPublicStories(filters: any) {
     return this.storyService.findAll({ where: { isPublic: true } });
-  }
+  } */
 
   /*  @Get('bests')
   findBestStories() {
@@ -60,9 +64,10 @@ export class StoryController {
     return this.storyService.findOne({ id: id });
   } */
 
-  @Get(':params')
-  findAll(@Param('params') params: Params) {
-    return this.storyService.findAll(params);
+  @Get()
+  findAll(@Query() params?: { filters?: string }) {
+    const parseFilters = this.filtersService.parseQueryParams(params);
+    return this.storyService.findAll(parseFilters);
   }
 
   @Get(':id')

@@ -4,6 +4,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateChapterDto } from './dto/create-chapter.dto';
 import { UpdateChapterDto } from './dto/update-chapter.dto';
 import { Story } from '../story/entities/story.entity';
+import { Params } from '../../helpers/models/filters';
 
 @Injectable()
 export class ChapterService {
@@ -35,14 +36,8 @@ export class ChapterService {
     }
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ChapterWhereUniqueInput;
-    where?: Prisma.ChapterWhereInput;
-    orderBy?: any;
-  }): Promise<Chapter[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async findAll(params: Params): Promise<Chapter[]> {
+    const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.chapter.findMany({
       skip,
       take,
