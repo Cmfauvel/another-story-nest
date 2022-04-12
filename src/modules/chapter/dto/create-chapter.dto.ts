@@ -1,10 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Story } from '../../story/entities/story.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Story } from "../../story/entities/story.entity";
 
 export class CreateChapterDto {
-  @ApiProperty()
-  content: string;
-
   @ApiProperty()
   title: string;
 
@@ -13,4 +10,7 @@ export class CreateChapterDto {
 
   @ApiProperty()
   story: Story;
+
+  @ApiProperty()
+  content: string;
 }

@@ -7,19 +7,20 @@ WORKDIR /app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY yarn*.lock ./
 
 # Install app dependencies
-RUN npm install --production
+RUN yarn install --force
 
 COPY . .
 
-RUN npm run build
+RUN yarn build
 
 FROM node:14-alpine
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/dist ./dist
+#COPY --from=builder /app/node_modules ./node_modules
+#COPY --from=builder /app/package*.json ./
+#COPY --from=builder /app/dist ./dist
 
 EXPOSE 1001
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "yarn", "start:prod" ]
