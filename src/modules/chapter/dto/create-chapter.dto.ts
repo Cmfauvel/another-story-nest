@@ -13,4 +13,10 @@ export class CreateChapterDto {
 
   @ApiProperty()
   content: string;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 }

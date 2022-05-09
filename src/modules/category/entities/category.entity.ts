@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Story } from '../../story/entities/story.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Story } from "../../story/entities/story.entity";
 
 export class Category {
   @ApiProperty()
@@ -10,6 +10,12 @@ export class Category {
 
   @ApiProperty()
   stories: Story[];
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 
   constructor(partial: Partial<Category>) {
     Object.assign(this, partial);

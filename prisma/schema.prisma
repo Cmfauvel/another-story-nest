@@ -19,6 +19,8 @@ model User {
   stories             Story[]
   followedBy          Follows[]           @relation("follower")
   following           Follows[]           @relation("following")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Follows {
@@ -26,6 +28,8 @@ model Follows {
   followerId  String @db.Uuid
   following   User   @relation("following", fields: [followingId], references: [id])
   followingId String @db.Uuid
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@id([followerId, followingId])
 }
@@ -45,18 +49,24 @@ model Story {
   locations  Location[]
   timeline   Timeline[]
   author     User?       @relation(fields: [authorId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Type {
   id      Int     @id @default(autoincrement())
   name    String  @unique
   stories Story[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Category {
   id      String  @id @default(uuid()) @db.Uuid
   name    String  @unique
   stories Story[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 //implicit manyToMany between category and story ===> to test
@@ -73,6 +83,8 @@ model Chapter {
   characters ChapterHasCharacters[]
   locations  ChapterHasLocations[]
   timelines  ChapterHasTimelines[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model ChapterHasCharacters {
@@ -110,6 +122,8 @@ model Character {
   storyId             String                 @db.Uuid
   story               Story                  @relation(fields: [storyId], references: [id])
   chapters            ChapterHasCharacters[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Location {
@@ -119,6 +133,8 @@ model Location {
   storyId     String                @db.Uuid
   story       Story                 @relation(fields: [storyId], references: [id])
   chapters    ChapterHasLocations[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Timeline {
@@ -127,6 +143,8 @@ model Timeline {
   storyId  String                @db.Uuid
   story    Story                 @relation(fields: [storyId], references: [id])
   chapters ChapterHasTimelines[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
 }
 
@@ -158,4 +176,6 @@ model Note {
   content   String
   chapterId String  @db.Uuid
   chapter   Chapter @relation(fields: [chapterId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }

@@ -20,5 +20,6 @@ module.exports = {
     "prefer-const": "error", //"off"
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "error",
+    "comma-dangle": [2, "always-multiline"] 
   },
 };

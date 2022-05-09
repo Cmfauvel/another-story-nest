@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateUserDto {
   @ApiProperty()
@@ -15,4 +15,10 @@ export class CreateUserDto {
 
   @ApiProperty()
   refreshTokenExpires: string;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt?: Date;
 }

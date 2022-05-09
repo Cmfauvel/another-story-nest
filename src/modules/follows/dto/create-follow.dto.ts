@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/modules/user/entities/user.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { User } from "src/modules/user/entities/user.entity";
 
 export class CreateFollowDto {
   @ApiProperty()
@@ -7,4 +7,10 @@ export class CreateFollowDto {
 
   @ApiProperty()
   following: User;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 }

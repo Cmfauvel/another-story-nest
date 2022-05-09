@@ -1,17 +1,11 @@
 /* eslint-disable prefer-const */
-import {
-  ConflictException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Auth } from './entities/auth.entity';
-import { compare } from 'bcryptjs';
-import { hash } from 'bcrypt';
-import { LoginDto } from './dto/login.dto';
-import { Request } from 'express';
-import { PrismaService } from 'src/config/prisma/prisma.service';
+import { ConflictException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { Auth } from "./entities/auth.entity";
+import { compare, hash } from "bcryptjs";
+import { LoginDto } from "./dto/login.dto";
+import { Request } from "express";
+import { PrismaService } from "src/config/prisma/prisma.service";
 
 @Injectable()
 export class AuthService {
@@ -19,11 +13,11 @@ export class AuthService {
 
   async logout(accessToken: string): Promise<void> {
     const { sub: id } = this.jwtService.decode(accessToken) as {
-      [key: string]: any;
+      [key: string]: string;
     };
     const data = {
-      refreshToken: '',
-      refreshTokenExpires: '',
+      refreshToken: "",
+      refreshTokenExpires: "",
     };
 
     await this.prisma.user.update({
@@ -41,13 +35,13 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Invalid Login');
+      throw new UnauthorizedException("Invalid Login");
     }
 
     const isSame = await compare(password, user.password);
 
     if (!isSame) {
-      throw new UnauthorizedException('Invalid Login');
+      throw new UnauthorizedException("Invalid Login");
     }
 
     const payload = { sub: { userId: user.id, mail: email } };
@@ -69,8 +63,8 @@ export class AuthService {
       username,
       email,
       password: hashedPassword,
-      refreshToken: '',
-      refreshTokenExpires: '',
+      refreshToken: "",
+      refreshTokenExpires: "",
     };
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,12 +72,12 @@ export class AuthService {
         data,
       });
 
-      return { code: 201, message: 'success' };
+      return { code: 201, message: "success" };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: 'cannot register with this email',
+          error: "cannot register with this email",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -91,6 +85,7 @@ export class AuthService {
   }
 
   async generateAccessToken(refreshToken) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const decodedToken: any = await this.jwtService.decode(refreshToken);
     return {
       accessToken: this.jwtService.sign({
@@ -100,31 +95,21 @@ export class AuthService {
     };
   }
 
-  async generateRefreshToken(
-    userId: string,
-  ): Promise<{ refreshToken: string; expiryDate: string }> {
+  async generateRefreshToken(userId: string): Promise<{ refreshToken: string; expiryDate: string }> {
     const payload = { sub: userId };
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 120);
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: expiryDate.getTime(),
     });
-    await this.saveOrUpdateRefreshToken(
-      refreshToken,
-      userId,
-      expiryDate.getTime().toString(),
-    );
+    await this.saveOrUpdateRefreshToken(refreshToken, userId, expiryDate.getTime().toString());
     return {
       refreshToken: refreshToken,
       expiryDate: expiryDate.getTime().toString(),
     };
   }
 
-  async saveOrUpdateRefreshToken(
-    refreshToken: string,
-    id: string,
-    refreshTokenExpires: string,
-  ) {
+  async saveOrUpdateRefreshToken(refreshToken: string, id: string, refreshTokenExpires: string) {
     let user;
     const data = {
       refreshToken,

@@ -28,7 +28,8 @@ export class ChapterController {
   }
 
   @Patch(":id")
-  update(@Param("id") @Body() data: { chapter: UpdateChapterDto; storyId: string }, id: string) {
+  update(@Param("id") id: string, @Body() data: { chapter: UpdateChapterDto; storyId: string }) {
+    console.log(data);
     return this.chapterService.update(data, id);
   }
 

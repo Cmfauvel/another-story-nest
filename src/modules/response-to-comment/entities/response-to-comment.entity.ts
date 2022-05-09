@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Comment } from 'src/modules/comment/entities/comment.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Comment } from "src/modules/comment/entities/comment.entity";
+import { User } from "src/modules/user/entities/user.entity";
 
 export class ResponseToComment {
   @ApiProperty()
@@ -20,6 +20,12 @@ export class ResponseToComment {
 
   @ApiProperty()
   comment: Comment;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 
   constructor(partial: Partial<ResponseToComment>) {
     Object.assign(this, partial);

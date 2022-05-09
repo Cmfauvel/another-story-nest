@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Story } from '../../story/entities/story.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Story } from "../../story/entities/story.entity";
 
 export class CreateTimelineDto {
   @ApiProperty()
@@ -7,4 +7,10 @@ export class CreateTimelineDto {
 
   @ApiProperty()
   story: Story;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt?: Date;
 }

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Chapter } from '../../chapter/entities/chapter.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Chapter } from "../../chapter/entities/chapter.entity";
 
 export class CreateNoteDto {
   @ApiProperty()
@@ -7,4 +7,10 @@ export class CreateNoteDto {
 
   @ApiProperty()
   chapter: Chapter;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 }
