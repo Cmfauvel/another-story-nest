@@ -20,6 +20,8 @@ import { WinstonModule, utilities as nestWinstonModuleUtilities } from "nest-win
 import * as winston from "winston";
 import { FiltersMiddleware } from "./middlewares/filters.middleware";
 import { ChapterHasCharactersModule } from "./modules/chapter-has-characters/chapter-has-characters.module";
+import { PictureModule } from "./picture/picture.module";
+import { ImageModule } from "./modules/image/image.module";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -57,6 +59,8 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
     ResponseToCommentModule,
     AuthModule,
     ChapterHasCharactersModule,
+    PictureModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

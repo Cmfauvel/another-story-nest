@@ -1,29 +1,27 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { User } from "src/modules/user/entities/user.entity";
 
-export class User {
+export class Image {
   @ApiProperty()
   id: string;
 
   @ApiProperty()
-  username: string;
+  name: string;
 
   @ApiProperty()
-  email: string;
+  description: string;
 
   @ApiProperty()
-  password: string;
+  role: "avatar" | "story";
 
   @ApiProperty()
-  refreshToken: string;
+  path: string;
 
   @ApiProperty()
-  refreshTokenExpires: string;
+  userId: string;
 
   @ApiProperty()
-  countStories?: number;
-
-  @ApiProperty()
-  countComments?: number;
+  user: User;
 
   @ApiProperty()
   createdAt: Date;
@@ -31,7 +29,7 @@ export class User {
   @ApiProperty()
   updatedAt: Date;
 
-  constructor(partial: Partial<User>) {
+  constructor(partial: Partial<Image>) {
     Object.assign(this, partial);
   }
 }

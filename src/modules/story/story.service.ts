@@ -1,10 +1,11 @@
-import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma, Story } from '@prisma/client';
-import { PrismaService } from 'src/config/prisma/prisma.service';
-import { Type } from '../type/entities/type.entity';
-import { CreateStoryDto } from './dto/create-story.dto';
-import { User } from '../user/entities/user.entity';
-import { Params } from '../../helpers/models/filters';
+import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
+import { Prisma, Story } from "@prisma/client";
+import { PrismaService } from "src/config/prisma/prisma.service";
+import { Type } from "../type/entities/type.entity";
+import { CreateStoryDto } from "./dto/create-story.dto";
+import { User } from "../user/entities/user.entity";
+import { Params } from "../../helpers/models/filters";
+import { UpdateStoryDto } from "./dto/update-story.dto";
 
 @Injectable()
 export class StoryService {
@@ -30,22 +31,20 @@ export class StoryService {
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { storyId: story.id, code: 201, message: 'success' };
+      return { storyId: story.id, code: 201, message: "success" };
     } catch (error) {
       console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: 'cannot create story',
+          error: "cannot create story",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
     }
   }
 
-  findOne = async (
-    storyWhereUniqueInput: Prisma.StoryWhereUniqueInput,
-  ): Promise<Story | null> => {
+  findOne = async (storyWhereUniqueInput: Prisma.StoryWhereUniqueInput): Promise<Story | null> => {
     try {
       const story = await this.prisma.story.findUnique({
         where: storyWhereUniqueInput,
@@ -58,7 +57,7 @@ export class StoryService {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: 'cannot create story',
+          error: "cannot create story",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -66,7 +65,7 @@ export class StoryService {
   };
 
   async findAll(params: Params): Promise<Story[]> {
-    console.log(params, 'here, in service');
+    console.log(params, "here, in service");
     const { skip, take, cursor, where, orderBy } = params.filters;
     return this.prisma.story.findMany({
       skip,
@@ -77,24 +76,32 @@ export class StoryService {
     });
   }
 
-  async update(params: {
-    where: Prisma.StoryWhereUniqueInput;
-    data: Prisma.StoryUpdateInput;
-  }): Promise<any> {
+  async update(data: { story: UpdateStoryDto; typeId: number; userId: string }, storyId: string) {
+    let story: Story;
     try {
-      //this.prisma.chapter.create
-      const { data, where } = params;
-      this.prisma.story.update({
-        data,
-        where,
+      story = await this.prisma.story.update({
+        where: { id: storyId },
+        data: {
+          ...data.story,
+          type: {
+            connect: {
+              id: data.typeId,
+            },
+          },
+          author: {
+            connect: {
+              id: data.userId,
+            },
+          },
+        },
       });
-      return { code: 201, message: 'success' };
+      return { storyId: story.id, code: 201, message: "success" };
     } catch (error) {
       console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: 'cannot update story',
+          error: "cannot update story",
         },
         HttpStatus.CONFLICT as unknown as string,
       );

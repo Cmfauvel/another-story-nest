@@ -1,30 +1,16 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
-import { StoryService } from './story.service';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CreateStoryDto } from './dto/create-story.dto';
-import { UpdateStoryDto } from './dto/update-story.dto';
-import { Type } from '../type/entities/type.entity';
-import { User } from '../user/entities/user.entity';
-import { Story } from './entities/story.entity';
-import { Prisma } from '@prisma/client';
-import { FiltersService } from '../../helpers/services/filters.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
+import { StoryService } from "./story.service";
+import { ApiBody, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { CreateStoryDto } from "./dto/create-story.dto";
+import { UpdateStoryDto } from "./dto/update-story.dto";
+import { Type } from "../type/entities/type.entity";
+import { User } from "../user/entities/user.entity";
+import { FiltersService } from "../../helpers/services/filters.service";
 
-@ApiTags('Stories')
-@Controller('stories')
+@ApiTags("Stories")
+@Controller("stories")
 export class StoryController {
-  constructor(
-    private readonly storyService: StoryService,
-    private filtersService: FiltersService,
-  ) {}
+  constructor(private readonly storyService: StoryService, private filtersService: FiltersService) {}
 
   @Post()
   @ApiBody({ type: CreateStoryDto })
@@ -70,27 +56,18 @@ export class StoryController {
     return this.storyService.findAll(parseFilters);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.storyService.findOne({ id: id });
   }
 
-  @Post()
-  @ApiBody({ type: UpdateStoryDto })
-  @ApiOkResponse({ type: Story })
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateStoryDto: Prisma.StoryUpdateInput,
-  ) {
-    return this.storyService.update({
-      where: { id: id },
-      data: updateStoryDto,
-    });
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() data: { story: UpdateStoryDto; typeId: number; userId: string }) {
+    return this.storyService.update(data, id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.storyService.remove({ id: id });
   }
 }

@@ -1,20 +1,33 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
-import { PrismaService } from 'src/config/prisma/prisma.service';
-import { Params } from '../../helpers/models/filters';
+import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
+import { PrismaService } from "src/config/prisma/prisma.service";
+import { Params } from "../../helpers/models/filters";
+import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(
-    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<User | null> {
-    console.log(userWhereUniqueInput);
-    return this.prisma.user.findUnique({
-      where: userWhereUniqueInput,
-    });
-  }
+  findOne = async (userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null> => {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: userWhereUniqueInput,
+        include: {
+          stories: true,
+          comments: true,
+        },
+      });
+      return { ...user, countStories: user.stories.length, countComments: user.comments.length };
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: "cannot find user",
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
+  };
 
   async findAll(params: Params): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params.filters;
@@ -27,10 +40,7 @@ export class UserService {
     });
   }
 
-  async update(params: {
-    where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
-  }): Promise<User> {
+  async update(params: { where: Prisma.UserWhereUniqueInput; data: Prisma.UserUpdateInput }): Promise<User> {
     const { data, where } = params;
     return this.prisma.user.update({
       data,
