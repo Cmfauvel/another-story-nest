@@ -17,7 +17,17 @@ export class UserService {
           comments: true,
         },
       });
-      return { ...user, countStories: user.stories.length, countComments: user.comments.length };
+      return {
+        id: user.id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        email: user.email,
+        username: user.username,
+        comments: user.comments,
+        stories: user.stories,
+        countStories: user.stories.length,
+        countComments: user.comments.length,
+      };
     } catch (error) {
       throw new ConflictException(
         {

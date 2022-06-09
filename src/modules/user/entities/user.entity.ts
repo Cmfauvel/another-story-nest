@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Story, Comment } from "@prisma/client";
 
 export class User {
   @ApiProperty()
@@ -11,19 +12,25 @@ export class User {
   email: string;
 
   @ApiProperty()
-  password: string;
+  password?: string;
 
   @ApiProperty()
-  refreshToken: string;
+  refreshToken?: string;
 
   @ApiProperty()
-  refreshTokenExpires: string;
+  refreshTokenExpires?: string;
 
   @ApiProperty()
   countStories?: number;
 
   @ApiProperty()
   countComments?: number;
+
+  @ApiProperty()
+  comments?: Comment[];
+
+  @ApiProperty()
+  stories?: Story[];
 
   @ApiProperty()
   createdAt: Date;

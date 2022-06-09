@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { StoryService } from './story.service';
-import { StoryController } from './story.controller';
-import { PrismaService } from '../../config/prisma/prisma.service';
-import { FiltersService } from '../../helpers/services/filters.service';
+import { Module } from "@nestjs/common";
+import { StoryService } from "./story.service";
+import { StoryController } from "./story.controller";
+import { PrismaService } from "../../config/prisma/prisma.service";
+import { FiltersService } from "../../helpers/services/filters.service";
 
 @Module({
   controllers: [StoryController],

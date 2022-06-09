@@ -1,10 +1,10 @@
-import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Location, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/config/prisma/prisma.service';
-import { Story } from '../story/entities/story.entity';
-import { CreateLocationDto } from './dto/create-location.dto';
-import { UpdateLocationDto } from './dto/update-location.dto';
-import { Params } from '../../helpers/models/filters';
+import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
+import { Location } from "@prisma/client";
+import { PrismaService } from "src/config/prisma/prisma.service";
+import { Story } from "../story/entities/story.entity";
+import { CreateLocationDto } from "./dto/create-location.dto";
+import { Params } from "../../helpers/models/filters";
+import { UpdateLocationDto } from "./dto/update-location.dto";
 
 @Injectable()
 export class LocationService {
@@ -25,13 +25,13 @@ export class LocationService {
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { locationId: location.id, code: 201, message: 'success' };
+      return { locationId: location.id, code: 201, message: "success" };
     } catch (error) {
       console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: 'cannot create location',
+          error: "cannot create location",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -48,8 +48,32 @@ export class LocationService {
       orderBy,
     });
   }
-  update(id: number, updateLocationDto: UpdateLocationDto) {
-    return `This action updates a #${id} location`;
+
+  async update(data: { location: UpdateLocationDto; storyId: string }, locationId: string) {
+    let location: Location;
+    try {
+      location = await this.prisma.location.update({
+        where: { id: locationId },
+        data: {
+          ...data.location,
+          story: {
+            connect: {
+              id: data.storyId,
+            },
+          },
+        },
+      });
+      return { locationId: location.id, code: 201, message: "success" };
+    } catch (error) {
+      console.log(error);
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: "cannot update location",
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   remove(id: number) {

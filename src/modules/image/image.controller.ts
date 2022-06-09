@@ -7,8 +7,8 @@ import { FiltersService } from "../../helpers/services/filters.service";
 import { CreateImageDto } from "./dto/create-image.dto";
 import { UpdateImageDto } from "./dto/update-image.dto";
 
-@ApiTags("Stories")
-@Controller("stories")
+@ApiTags("Images")
+@Controller("images")
 export class ImageController {
   constructor(private readonly imageService: ImageService, private filtersService: FiltersService) {}
 

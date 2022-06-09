@@ -52,6 +52,7 @@ export class StoryController {
 
   @Get()
   findAll(@Query() params?: { filters?: string }) {
+    console.log(params.filters);
     const parseFilters = this.filtersService.parseQueryParams(params);
     return this.storyService.findAll(parseFilters);
   }
