@@ -1,20 +1,16 @@
-import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { Comment, Prisma, User } from '@prisma/client';
-import { PrismaService } from 'src/config/prisma/prisma.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Chapter } from '../chapter/entities/chapter.entity';
-import { Params } from '../../helpers/models/filters';
+import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
+import { Comment } from "@prisma/client";
+import { PrismaService } from "src/config/prisma/prisma.service";
+import { CreateCommentDto } from "./dto/create-comment.dto";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { Chapter } from "../chapter/entities/chapter.entity";
+import { Params } from "../../helpers/models/filters";
 
 @Injectable()
 export class CommentService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: {
-    comment: CreateCommentDto;
-    chapter: Chapter;
-    user: User;
-  }) {
+  async create(data: { comment: CreateCommentDto; chapter: Chapter; userId: string }) {
     console.log(data);
     let comment: Comment;
     try {
@@ -28,19 +24,19 @@ export class CommentService {
           },
           author: {
             connect: {
-              id: data.user.id,
+              id: data.userId,
             },
           },
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { commentId: comment.id, code: 201, message: 'success' };
+      return { commentId: comment.id, code: 201, message: "success" };
     } catch (error) {
       console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: 'cannot create comment',
+          error: "cannot create comment",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -58,8 +54,36 @@ export class CommentService {
     });
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async update(data: { comment: UpdateCommentDto; chapterId: string; userId: string }, commentId: string) {
+    let comment: Comment;
+    try {
+      comment = await this.prisma.comment.update({
+        where: { id: commentId },
+        data: {
+          ...data.comment,
+          author: {
+            connect: {
+              id: data.userId,
+            },
+          },
+          chapter: {
+            connect: {
+              id: data.chapterId,
+            },
+          },
+        },
+      });
+      return { commentId: comment.id, code: 201, message: "success" };
+    } catch (error) {
+      console.log(error);
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: "cannot update comment",
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   remove(id: number) {

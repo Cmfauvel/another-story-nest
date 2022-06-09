@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../../../types';
-import { Chapter } from '../../chapter/entities/chapter.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { User } from "src/modules/user/entities/user.entity";
+import { Chapter } from "../../chapter/entities/chapter.entity";
 
 export class CreateCommentDto {
   @ApiProperty()

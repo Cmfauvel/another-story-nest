@@ -9,20 +9,23 @@ import { Params } from "../../helpers/models/filters";
 export class ChapterService {
   constructor(private prisma: PrismaService) {}
   async create(data: { chapter: CreateChapterDto; storyId: string }) {
-    let chapter: Chapter;
     try {
-      chapter = await this.prisma.chapter.create({
-        data: {
-          ...data.chapter,
-          story: {
-            connect: {
-              id: data.storyId,
+      let chapter: Chapter;
+      const chapters: Chapter[] = await this.findAll({ filters: { where: { storyId: data.storyId, title: data.chapter.title } } });
+      if (chapters.length > 0) {
+        chapter = await this.prisma.chapter.create({
+          data: {
+            ...data.chapter,
+            story: {
+              connect: {
+                id: data.storyId,
+              },
             },
           },
-        },
-      });
-      //vérifier que l'utilisateur existe/a les droits
-      return { chapterId: chapter.id, code: 201, message: "success" };
+        });
+        //vérifier que l'utilisateur existe/a les droits
+        return { chapterId: chapter.id, code: 201, message: "success" };
+      }
     } catch (error) {
       console.log(error);
       throw new ConflictException(
@@ -37,13 +40,23 @@ export class ChapterService {
 
   async findAll(params: Params): Promise<Chapter[]> {
     const { skip, take, cursor, where, orderBy } = params.filters;
-    return this.prisma.chapter.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    try {
+      return this.prisma.chapter.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+      });
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: "cannot find chapters",
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   async update(data: { chapter: UpdateChapterDto; storyId: string }, chapterId: string) {

@@ -3,7 +3,6 @@ import { Prisma, Story } from "@prisma/client";
 import { PrismaService } from "src/config/prisma/prisma.service";
 import { Type } from "../type/entities/type.entity";
 import { CreateStoryDto } from "./dto/create-story.dto";
-import { User } from "../user/entities/user.entity";
 import { Params } from "../../helpers/models/filters";
 import { UpdateStoryDto } from "./dto/update-story.dto";
 
@@ -11,7 +10,7 @@ import { UpdateStoryDto } from "./dto/update-story.dto";
 export class StoryService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: { story: CreateStoryDto; type: Type; user: User }) {
+  async create(data: { story: CreateStoryDto; type: Type; userId: string }) {
     console.log(data);
     let story: Story;
     try {
@@ -25,7 +24,7 @@ export class StoryService {
           },
           author: {
             connect: {
-              id: data.user.id,
+              id: data.userId,
             },
           },
         },

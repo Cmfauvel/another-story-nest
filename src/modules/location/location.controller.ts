@@ -28,8 +28,8 @@ export class LocationController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateLocationDto: UpdateLocationDto) {
-    return this.locationService.update(+id, updateLocationDto);
+  update(@Param("id") id: string, @Body() data: { location: UpdateLocationDto; chapterId: string; storyId: string }) {
+    return this.locationService.update(data, id);
   }
 
   @Delete(":id")
