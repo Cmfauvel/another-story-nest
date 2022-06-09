@@ -12,7 +12,8 @@ export class ChapterService {
     try {
       let chapter: Chapter;
       const chapters: Chapter[] = await this.findAll({ filters: { where: { storyId: data.storyId, title: data.chapter.title } } });
-      if (chapters.length > 0) {
+      console.log(chapters);
+      if (chapters.length === 0) {
         chapter = await this.prisma.chapter.create({
           data: {
             ...data.chapter,
@@ -25,6 +26,8 @@ export class ChapterService {
         });
         //vérifier que l'utilisateur existe/a les droits
         return { chapterId: chapter.id, code: 201, message: "success" };
+      } else {
+        return { code: 409, message: "A chapter with this title already exists." };
       }
     } catch (error) {
       console.log(error);
