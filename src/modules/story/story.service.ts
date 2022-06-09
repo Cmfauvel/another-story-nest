@@ -5,12 +5,13 @@ import { Type } from "../type/entities/type.entity";
 import { CreateStoryDto } from "./dto/create-story.dto";
 import { Params } from "../../helpers/models/filters";
 import { UpdateStoryDto } from "./dto/update-story.dto";
+import { User } from "../user/entities/user.entity";
 
 @Injectable()
 export class StoryService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: { story: CreateStoryDto; type: Type; userId: string }) {
+  async create(data: { story: CreateStoryDto; type: Type; user: User }) {
     console.log(data);
     let story: Story;
     try {
@@ -24,7 +25,7 @@ export class StoryService {
           },
           author: {
             connect: {
-              id: data.userId,
+              id: data.user.id,
             },
           },
         },
@@ -66,13 +67,23 @@ export class StoryService {
   async findAll(params: Params): Promise<Story[]> {
     console.log(params, "here, in service");
     const { skip, take, cursor, where, orderBy } = params.filters;
-    return this.prisma.story.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    try {
+      return this.prisma.story.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+      });
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: "cannot find chapters",
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   async update(data: { story: UpdateStoryDto; typeId: number; userId: string }, storyId: string) {
