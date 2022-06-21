@@ -22,6 +22,7 @@ import { FiltersMiddleware } from "./middlewares/filters.middleware";
 import { ChapterHasCharactersModule } from "./modules/chapter-has-characters/chapter-has-characters.module";
 import { PictureModule } from "./picture/picture.module";
 import { ImageModule } from "./modules/image/image.module";
+import { configValidationSchema } from "./config/config.schema";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -30,6 +31,9 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: [`./src/config/.env.${process.env.NODE_ENV}`], //${process.env.NODE_ENV}
+      validationSchema: configValidationSchema,
+      cache: true,
     }),
     WinstonModule.forRootAsync({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

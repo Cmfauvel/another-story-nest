@@ -41,13 +41,40 @@ export class UserService {
 
   async findAll(params: Params): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params.filters;
-    return this.prisma.user.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    try {
+      const users = await this.prisma.user.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+        include: {
+          stories: true,
+          comments: true,
+        },
+      });
+      return users.map(user => {
+        return {
+          id: user.id,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          email: user.email,
+          username: user.username,
+          comments: user.comments,
+          stories: user.stories,
+          countStories: user.stories.length,
+          countComments: user.comments.length,
+        };
+      });
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: "cannot find users",
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
   }
 
   async update(params: { where: Prisma.UserWhereUniqueInput; data: Prisma.UserUpdateInput }): Promise<User> {

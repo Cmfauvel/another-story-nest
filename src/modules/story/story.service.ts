@@ -15,23 +15,28 @@ export class StoryService {
     console.log(data);
     let story: Story;
     try {
-      story = await this.prisma.story.create({
-        data: {
-          ...data.story,
-          type: {
-            connect: {
-              id: data.type.id,
+      const alreadyExistedStory = await this.findAll({ filters: { where: { title: data.story.title } } });
+      if (alreadyExistedStory.length === 0) {
+        story = await this.prisma.story.create({
+          data: {
+            ...data.story,
+            type: {
+              connect: {
+                id: data.type.id,
+              },
+            },
+            author: {
+              connect: {
+                id: data.user.id,
+              },
             },
           },
-          author: {
-            connect: {
-              id: data.user.id,
-            },
-          },
-        },
-      });
-      //vérifier que l'utilisateur existe/a les droits
-      return { storyId: story.id, code: 201, message: "success" };
+        });
+        //vérifier que l'utilisateur existe/a les droits
+        return { storyId: story.id, code: 201, message: "success" };
+      } else {
+        return { code: 409, message: "A story with this title already exists." };
+      }
     } catch (error) {
       console.log(error);
       throw new ConflictException(

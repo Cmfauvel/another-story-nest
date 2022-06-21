@@ -6,6 +6,7 @@ import { compare, hash } from "bcryptjs";
 import { LoginDto } from "./dto/login.dto";
 import { Request } from "express";
 import { PrismaService } from "src/config/prisma/prisma.service";
+import { User } from "../user/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -26,28 +27,28 @@ export class AuthService {
     });
   }
 
-  async login(request: Request): Promise<Auth> {
-    let user;
+  async login(request: Request, user: User): Promise<Auth> {
+    let userToConnect;
     const { email, password }: LoginDto = request.body;
 
-    user = await this.prisma.user.findUnique({
-      where: { email: email },
+    userToConnect = await this.prisma.user.findUnique({
+      where: { email: user.email },
     });
 
-    if (!user) {
+    if (!userToConnect) {
       throw new UnauthorizedException("Invalid Login");
     }
 
-    const isSame = await compare(password, user.password);
+    const isSame = await compare(password, userToConnect.password);
 
     if (!isSame) {
       throw new UnauthorizedException("Invalid Login");
     }
 
-    const payload = { sub: { userId: user.id, mail: email } };
+    const payload = { sub: { userId: userToConnect.id, mail: email } };
 
     const accessToken = this.jwtService.sign(payload);
-    const refreshMethod = await this.generateRefreshToken(user.id);
+    const refreshMethod = await this.generateRefreshToken(userToConnect.id);
 
     return {
       accessToken: accessToken,

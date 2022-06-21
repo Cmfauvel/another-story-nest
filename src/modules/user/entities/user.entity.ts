@@ -6,10 +6,10 @@ export class User {
   id: string;
 
   @ApiProperty()
-  username: string;
+  username?: string;
 
   @ApiProperty()
-  email: string;
+  email?: string;
 
   @ApiProperty()
   password?: string;
@@ -33,10 +33,10 @@ export class User {
   stories?: Story[];
 
   @ApiProperty()
-  createdAt: Date;
+  createdAt?: Date;
 
   @ApiProperty()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
