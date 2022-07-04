@@ -25,7 +25,6 @@ export class ChapterHasCharactersService {
       //vérifier que l'utilisateur existe/a les droits
       return { chapterHasCharacter, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,

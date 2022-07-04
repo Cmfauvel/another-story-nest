@@ -11,7 +11,6 @@ export class CommentService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: { comment: CreateCommentDto; chapter: Chapter; userId: string }) {
-    console.log(data);
     let comment: Comment;
     try {
       comment = await this.prisma.comment.create({
@@ -32,7 +31,6 @@ export class CommentService {
       //vérifier que l'utilisateur existe/a les droits
       return { commentId: comment.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
@@ -75,7 +73,6 @@ export class CommentService {
       });
       return { commentId: comment.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,

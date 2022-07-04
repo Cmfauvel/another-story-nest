@@ -1,15 +1,15 @@
 /* eslint-disable prefer-const */
-import { ConflictException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Auth } from "./entities/auth.entity";
 import { compare, hash } from "bcryptjs";
 import { LoginDto } from "./dto/login.dto";
-import { Request } from "express";
 import { PrismaService } from "src/config/prisma/prisma.service";
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+  constructor(private prisma: PrismaService, private jwtService: JwtService, private userService: UserService) {}
 
   async logout(accessToken: string): Promise<void> {
     const { sub: id } = this.jwtService.decode(accessToken) as {
@@ -26,9 +26,29 @@ export class AuthService {
     });
   }
 
-  async login(request: Request): Promise<Auth> {
+  public async getAuthenticatedUser(email: string, plainTextPassword: string) {
+    try {
+      const user = await this.userService.findOne({ email: email });
+      const isSame = await compare(plainTextPassword, user.password);
+
+      if (!isSame) {
+        throw new UnauthorizedException("Invalid Login");
+      }
+      console.log(email, user.password, plainTextPassword);
+      if (user && isSame) {
+        user.password = undefined;
+        return user;
+      }
+      return null;
+    } catch {
+      throw new HttpException("Wrong credentials provided", HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async login(request): Promise<Auth> {
     let user;
-    const { email, password }: LoginDto = request.body;
+    console.log("in login function :", request);
+    const { email }: LoginDto = request.body;
 
     user = await this.prisma.user.findUnique({
       where: { email: email },
@@ -38,11 +58,11 @@ export class AuthService {
       throw new UnauthorizedException("Invalid Login");
     }
 
-    const isSame = await compare(password, user.password);
+    /* const isSame = await compare(password, user.password);
 
     if (!isSame) {
       throw new UnauthorizedException("Invalid Login");
-    }
+    } */
 
     const payload = { sub: { userId: user.id, mail: email } };
 

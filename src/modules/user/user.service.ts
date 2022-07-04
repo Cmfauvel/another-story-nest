@@ -23,6 +23,7 @@ export class UserService {
         updatedAt: user.updatedAt,
         email: user.email,
         username: user.username,
+        password: user.password,
         comments: user.comments,
         stories: user.stories,
         countStories: user.stories.length,

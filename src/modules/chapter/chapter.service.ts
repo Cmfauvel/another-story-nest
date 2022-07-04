@@ -30,7 +30,6 @@ export class ChapterService {
         return { code: 409, message: "A chapter with this title already exists." };
       }
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
@@ -79,7 +78,6 @@ export class ChapterService {
       //vérifier que l'utilisateur existe/a les droits
       return { chapterId: chapter.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,

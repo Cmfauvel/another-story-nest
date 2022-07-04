@@ -11,7 +11,6 @@ export class LocationService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: { location: CreateLocationDto; story: Story }) {
-    console.log(data);
     let location: Location;
     try {
       location = await this.prisma.location.create({
@@ -27,7 +26,6 @@ export class LocationService {
       //vérifier que l'utilisateur existe/a les droits
       return { locationId: location.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
@@ -65,7 +63,6 @@ export class LocationService {
       });
       return { locationId: location.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,

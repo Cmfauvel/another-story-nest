@@ -11,7 +11,6 @@ export class ImageService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: { image: CreateImageDto; user: User }) {
-    console.log(data);
     let image: Image;
     try {
       image = await this.prisma.image.create({
@@ -27,7 +26,6 @@ export class ImageService {
       //vérifier que l'utilisateur existe/a les droits
       return { imageId: image.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
@@ -86,7 +84,6 @@ export class ImageService {
       });
       return { imageId: image.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,

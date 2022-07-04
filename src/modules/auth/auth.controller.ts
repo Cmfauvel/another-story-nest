@@ -1,32 +1,34 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
+import { Body, Controller, HttpCode, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { AuthService } from "./auth.service";
 //import { LoginDto } from './dto/login.dto';
-import { Auth } from './entities/auth.entity';
-import { Request, Response } from 'express';
+import { Auth } from "./entities/auth.entity";
+import { Response } from "express";
+import { LocalAuthGuard } from "./local-auth.guard";
 
-@Controller('auth')
-@ApiTags('auth')
+@Controller("auth")
+@ApiTags("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('login')
+  @HttpCode(200)
+  @Post("login")
+  @UseGuards(LocalAuthGuard) // ou @UseGuards(AuthGuard("local"))
   @ApiOkResponse({ type: Auth })
-  async login(
-    @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async login(@Req() request, @Res({ passthrough: true }) response: Response) {
+    console.log(request.body);
     const { accessToken, refreshToken } = await this.authService.login(request);
-    response.cookie('accessToken', accessToken, {
+    /*  
+    response.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 5,
     });
 
-    response.cookie('refreshToken', refreshToken, {
+    response.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 120,
-    });
-    response.json({
+    }); */
+    return response.json({
       accessToken,
       accessTokenExpiresIn: 1000 * 60 * 5,
       refreshToken,
@@ -34,7 +36,7 @@ export class AuthController {
     });
   }
 
-  @Post('register')
+  @Post("register")
   @ApiOkResponse({ type: Auth })
   async register(
     @Body()
@@ -47,13 +49,13 @@ export class AuthController {
     return this.authService.register(args);
   }
 
-  @Post('logout')
+  @Post("logout")
   @ApiOkResponse()
   async logout(@Body() { accessToken }: { accessToken: string }) {
     return this.authService.logout(accessToken);
   }
 
-  @Post('refreshtoken')
+  @Post("refreshtoken")
   @ApiOkResponse()
   async refreshToken(@Body() { refreshToken }: { refreshToken: string }) {
     return {

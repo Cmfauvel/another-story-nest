@@ -12,7 +12,6 @@ export class StoryService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: { story: CreateStoryDto; type: Type; user: User }) {
-    console.log(data);
     let story: Story;
     try {
       story = await this.prisma.story.create({
@@ -33,7 +32,6 @@ export class StoryService {
       //vérifier que l'utilisateur existe/a les droits
       return { storyId: story.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
@@ -107,7 +105,6 @@ export class StoryService {
       });
       return { storyId: story.id, code: 201, message: "success" };
     } catch (error) {
-      console.log(error);
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,

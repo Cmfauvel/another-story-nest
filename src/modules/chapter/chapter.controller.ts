@@ -12,7 +12,6 @@ export class ChapterController {
 
   @Post()
   create(@Body() data: { chapter: CreateChapterDto; storyId: string }) {
-    console.log(data);
     return this.chapterService.create(data);
   }
 
@@ -29,7 +28,6 @@ export class ChapterController {
 
   @Patch(":id")
   update(@Param("id") id: string, @Body() data: { chapter: UpdateChapterDto; storyId: string }) {
-    console.log(data);
     return this.chapterService.update(data, id);
   }
 

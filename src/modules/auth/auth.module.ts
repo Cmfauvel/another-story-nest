@@ -8,6 +8,8 @@ import { JwtStrategy } from "./jwt.strategy";
 import { JwtRefreshTokenStrategy } from "./jwt-refresh-token.strategy";
 import { UserModule } from "../user/user.module";
 import { PrismaService } from "../../config/prisma/prisma.service";
+import { LocalStrategy } from "./local.strategy";
+import { UserService } from "../user/user.service";
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { PrismaService } from "../../config/prisma/prisma.service";
       signOptions: { expiresIn: "5m" },
     }),
   ],
-  providers: [AuthService, JwtStrategy, JwtRefreshTokenStrategy, PrismaService],
+  providers: [AuthService, UserService, JwtStrategy, LocalStrategy, JwtRefreshTokenStrategy, PrismaService],
   exports: [AuthService, JwtModule],
   controllers: [AuthController],
 })
