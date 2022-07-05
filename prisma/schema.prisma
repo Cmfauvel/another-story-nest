@@ -16,7 +16,6 @@ model User {
   refreshTokenExpires String
   images              Image[]
   comments            Comment[]
-  responses           ResponseToComment[]
   stories             Story[]
   followedBy          Follows[]           @relation("follower")
   following           Follows[]           @relation("following")
@@ -36,38 +35,43 @@ model Follows {
 }
 
 model Story {
-  id         String      @id @default(uuid()) @db.Uuid
+  id         String               @id @default(uuid()) @db.Uuid
   title      String
   resume     String?
-  typeId     Int?
-  type       Type?       @relation(fields: [typeId], references: [id])
-  isPublic   Boolean     @default(false)
-  authorId   String      @db.Uuid
+  type       Type?
+  isPublic   Boolean              @default(false)
+  authorId   String               @db.Uuid
   stars      Int?
-  categories Category[]
+  categories StoryHasCategories[]
   chapters   Chapter[]
   characters Character[]
   locations  Location[]
-  timeline   Timeline[]
-  author     User?       @relation(fields: [authorId], references: [id])
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  author     User?                @relation(fields: [authorId], references: [id])
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
 }
 
-model Type {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  stories   Story[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum Type {
+  novel
+  poetry
+  short
+}
+
+model StoryHasCategories {
+  categoryId String   @db.Uuid
+  storyId    String   @db.Uuid
+  story      Story    @relation(fields: [storyId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([storyId, categoryId])
 }
 
 model Category {
-  id        String   @id @default(uuid()) @db.Uuid
-  name      String   @unique
-  stories   Story[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String               @id @default(uuid()) @db.Uuid
+  name      String               @unique
+  stories   StoryHasCategories[]
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
 }
 
 model Image {
@@ -76,10 +80,10 @@ model Image {
   description String
   role        ImageRole
   path        String
-  userId      String      @db.Uuid
+  userId      String    @db.Uuid
   user        User      @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 enum ImageRole {
@@ -90,110 +94,46 @@ enum ImageRole {
 //implicit manyToMany between category and story ===> to test
 
 model Chapter {
-  id         String                 @id @default(uuid()) @db.Uuid
-  resume     String?
-  title      String?
-  content    String
-  storyId    String                 @db.Uuid
-  story      Story                  @relation(fields: [storyId], references: [id])
-  notes      Note[]
-  comments   Comment[]
-  characters ChapterHasCharacters[]
-  locations  ChapterHasLocations[]
-  timelines  ChapterHasTimelines[]
-  createdAt  DateTime               @default(now())
-  updatedAt  DateTime               @updatedAt
-}
-
-model ChapterHasCharacters {
-  chapterId   String    @db.Uuid
-  characterId String    @db.Uuid
-  chapter     Chapter   @relation(fields: [chapterId], references: [id])
-  character   Character @relation(fields: [characterId], references: [id])
-
-  @@id([chapterId, characterId])
-}
-
-model ChapterHasLocations {
-  chapterId  String   @db.Uuid
-  locationId String   @db.Uuid
-  chapter    Chapter  @relation(fields: [chapterId], references: [id])
-  location   Location @relation(fields: [locationId], references: [id])
-
-  @@id([chapterId, locationId])
-}
-
-model ChapterHasTimelines {
-  chapterId  String   @db.Uuid
-  timelineId String   @db.Uuid
-  chapter    Chapter  @relation(fields: [chapterId], references: [id])
-  timeline   Timeline @relation(fields: [timelineId], references: [id])
-
-  @@id([chapterId, timelineId])
+  id        String    @id @default(uuid()) @db.Uuid
+  resume    String?
+  title     String?
+  content   String
+  storyId   String    @db.Uuid
+  story     Story     @relation(fields: [storyId], references: [id])
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Character {
-  id                  String                 @id @default(uuid()) @db.Uuid
+  id                  String   @id @default(uuid()) @db.Uuid
   physicalDescription String
   personality         String
   distinctiveSigns    String
-  storyId             String                 @db.Uuid
-  story               Story                  @relation(fields: [storyId], references: [id])
-  chapters            ChapterHasCharacters[]
-  createdAt           DateTime               @default(now())
-  updatedAt           DateTime               @updatedAt
+  storyId             String   @db.Uuid
+  story               Story    @relation(fields: [storyId], references: [id])
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model Location {
-  id          String                @id @default(uuid()) @db.Uuid
+  id          String   @id @default(uuid()) @db.Uuid
   name        String
   description String
-  storyId     String                @db.Uuid
-  story       Story                 @relation(fields: [storyId], references: [id])
-  chapters    ChapterHasLocations[]
-  createdAt   DateTime              @default(now())
-  updatedAt   DateTime              @updatedAt
-}
-
-model Timeline {
-  id        String                @id @default(uuid()) @db.Uuid
-  period    String
-  storyId   String                @db.Uuid
-  story     Story                 @relation(fields: [storyId], references: [id])
-  chapters  ChapterHasTimelines[]
-  createdAt DateTime              @default(now())
-  updatedAt DateTime              @updatedAt
-
+  storyId     String   @db.Uuid
+  story       Story    @relation(fields: [storyId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Comment {
-  id        String              @id @default(uuid()) @db.Uuid
-  content   String
-  authorId  String              @db.Uuid
-  chapterId String              @db.Uuid
-  author    User                @relation(fields: [authorId], references: [id])
-  chapter   Chapter             @relation(fields: [chapterId], references: [id])
-  responses ResponseToComment[]
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
-}
-
-model ResponseToComment {
-  id        String   @id @default(uuid()) @db.Uuid
-  content   String
-  authorId  String   @db.Uuid
-  commentId String   @db.Uuid
-  author    User     @relation(fields: [authorId], references: [id])
-  comment   Comment  @relation(fields: [commentId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Note {
-  id        String   @id @default(uuid()) @db.Uuid
-  content   String
-  chapterId String   @db.Uuid
-  chapter   Chapter  @relation(fields: [chapterId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String   @id @default(uuid()) @db.Uuid
+  content           String
+  authorId          String   @db.Uuid
+  chapterId         String   @db.Uuid
+  responseToComment String   @db.Uuid
+  author            User     @relation(fields: [authorId], references: [id])
+  chapter           Chapter  @relation(fields: [chapterId], references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }

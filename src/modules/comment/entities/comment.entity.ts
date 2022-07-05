@@ -1,7 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Chapter } from 'src/modules/chapter/entities/chapter.entity';
-import { User } from 'src/modules/user/entities/user.entity';
-import { ResponseToComment } from '../../response-to-comment/entities/response-to-comment.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Chapter } from "src/modules/chapter/entities/chapter.entity";
+import { User } from "src/modules/user/entities/user.entity";
 
 export class Comment {
   @ApiProperty()
@@ -14,6 +13,9 @@ export class Comment {
   authorId: string;
 
   @ApiProperty()
+  responseToComment?: string;
+
+  @ApiProperty()
   author: User;
 
   @ApiProperty()
@@ -21,9 +23,6 @@ export class Comment {
 
   @ApiProperty()
   chapter: Chapter;
-
-  @ApiProperty()
-  responses: ResponseToComment[];
 
   constructor(partial: Partial<Comment>) {
     Object.assign(this, partial);

@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Chapter } from "src/modules/chapter/entities/chapter.entity";
 import { Story } from "src/modules/story/entities/story.entity";
 
 export class Character {
@@ -20,9 +19,6 @@ export class Character {
 
   @ApiProperty()
   story: Story;
-
-  @ApiProperty()
-  chapters: Chapter[];
 
   @ApiProperty()
   createdAt: Date;

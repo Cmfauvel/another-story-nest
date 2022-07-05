@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Chapter } from "src/modules/chapter/entities/chapter.entity";
 import { Story } from "src/modules/story/entities/story.entity";
 
 export class Location {
@@ -17,9 +16,6 @@ export class Location {
 
   @ApiProperty()
   story: Story;
-
-  @ApiProperty()
-  chapters: Chapter[];
 
   @ApiProperty()
   createdAt: Date;
