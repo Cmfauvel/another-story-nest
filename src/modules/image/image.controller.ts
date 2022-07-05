@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
 import { ImageService } from "./image.service";
 import { ApiBody, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import { Type } from "../type/entities/type.entity";
 import { User } from "../user/entities/user.entity";
 import { FiltersService } from "../../helpers/services/filters.service";
 import { CreateImageDto } from "./dto/create-image.dto";
@@ -17,7 +16,7 @@ export class ImageController {
   //Parameters in swagger
   @ApiOkResponse()
   //type of response in swagger
-  create(@Body() data: { image: CreateImageDto; type: Type; user: User }) {
+  create(@Body() data: { image: CreateImageDto; user: User }) {
     return this.imageService.create(data);
   }
 

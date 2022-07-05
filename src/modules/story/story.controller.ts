@@ -3,7 +3,6 @@ import { StoryService } from "./story.service";
 import { ApiBody, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { CreateStoryDto } from "./dto/create-story.dto";
 import { UpdateStoryDto } from "./dto/update-story.dto";
-import { Type } from "../type/entities/type.entity";
 import { FiltersService } from "../../helpers/services/filters.service";
 import { User } from "../user/entities/user.entity";
 
@@ -17,7 +16,7 @@ export class StoryController {
   //Parameters in swagger
   @ApiOkResponse()
   //type of response in swagger
-  create(@Body() data: { story: CreateStoryDto; type: Type; user: User }) {
+  create(@Body() data: { story: CreateStoryDto; user: User }) {
     return this.storyService.create(data);
   }
 

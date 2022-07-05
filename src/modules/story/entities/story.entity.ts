@@ -1,10 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "@prisma/client";
 import { Category } from "src/modules/category/entities/category.entity";
 import { Chapter } from "src/modules/chapter/entities/chapter.entity";
 import { Character } from "src/modules/character/entities/character.entity";
-import { Timeline } from "src/modules/timeline/entities/timeline.entity";
 import { User } from "src/modules/user/entities/user.entity";
-import { Type } from "../../type/entities/type.entity";
 
 export class Story {
   @ApiProperty()
@@ -45,9 +44,6 @@ export class Story {
 
   @ApiProperty()
   locations: Location[];
-
-  @ApiProperty()
-  timeline: Timeline[];
 
   @ApiProperty()
   createdAt: Date;

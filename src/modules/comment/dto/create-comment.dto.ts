@@ -7,6 +7,9 @@ export class CreateCommentDto {
   content: string;
 
   @ApiProperty()
+  responseToComment: string;
+
+  @ApiProperty()
   author: User;
 
   @ApiProperty()

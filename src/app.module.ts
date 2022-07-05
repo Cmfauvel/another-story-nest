@@ -7,19 +7,14 @@ import { ChapterModule } from "./modules/chapter/chapter.module";
 import { CommentModule } from "./modules/comment/comment.module";
 import { FollowsModule } from "./modules/follows/follows.module";
 import { CategoryModule } from "./modules/category/category.module";
-import { TypeModule } from "./modules/type/type.module";
 import { CharacterModule } from "./modules/character/character.module";
 import { LocationModule } from "./modules/location/location.module";
-import { TimelineModule } from "./modules/timeline/timeline.module";
-import { NoteModule } from "./modules/note/note.module";
-import { ResponseToCommentModule } from "./modules/response-to-comment/response-to-comment.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { RefreshTokenMiddleware } from "./middlewares/refresh-token.middleware";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { WinstonModule, utilities as nestWinstonModuleUtilities } from "nest-winston";
 import * as winston from "winston";
 import { FiltersMiddleware } from "./middlewares/filters.middleware";
-import { ChapterHasCharactersModule } from "./modules/chapter-has-characters/chapter-has-characters.module";
 import { PictureModule } from "./picture/picture.module";
 import { ImageModule } from "./modules/image/image.module";
 
@@ -51,14 +46,9 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
     CommentModule,
     FollowsModule,
     CategoryModule,
-    TypeModule,
     CharacterModule,
     LocationModule,
-    TimelineModule,
-    NoteModule,
-    ResponseToCommentModule,
     AuthModule,
-    ChapterHasCharactersModule,
     PictureModule,
     ImageModule,
   ],

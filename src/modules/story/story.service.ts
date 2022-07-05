@@ -1,7 +1,6 @@
 import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
 import { Prisma, Story } from "@prisma/client";
 import { PrismaService } from "src/config/prisma/prisma.service";
-import { Type } from "../type/entities/type.entity";
 import { CreateStoryDto } from "./dto/create-story.dto";
 import { Params } from "../../helpers/models/filters";
 import { UpdateStoryDto } from "./dto/update-story.dto";
@@ -11,17 +10,12 @@ import { User } from "../user/entities/user.entity";
 export class StoryService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: { story: CreateStoryDto; type: Type; user: User }) {
+  async create(data: { story: CreateStoryDto; user: User }) {
     let story: Story;
     try {
       story = await this.prisma.story.create({
         data: {
           ...data.story,
-          type: {
-            connect: {
-              id: data.type.id,
-            },
-          },
           author: {
             connect: {
               id: data.user.id,
@@ -84,18 +78,13 @@ export class StoryService {
     }
   }
 
-  async update(data: { story: UpdateStoryDto; typeId: number; userId: string }, storyId: string) {
+  async update(data: { story: UpdateStoryDto; userId: string }, storyId: string) {
     let story: Story;
     try {
       story = await this.prisma.story.update({
         where: { id: storyId },
         data: {
           ...data.story,
-          type: {
-            connect: {
-              id: data.typeId,
-            },
-          },
           author: {
             connect: {
               id: data.userId,
