@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
-import { Comment } from "@prisma/client";
+import { Comment, Prisma } from "@prisma/client";
 import { PrismaService } from "src/config/prisma/prisma.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
@@ -83,7 +83,9 @@ export class CommentService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async remove(where: Prisma.CommentWhereUniqueInput): Promise<Comment> {
+    return this.prisma.comment.delete({
+      where,
+    });
   }
 }

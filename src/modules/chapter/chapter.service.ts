@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
-import { Chapter } from "@prisma/client";
+import { Chapter, Prisma } from "@prisma/client";
 import { PrismaService } from "src/config/prisma/prisma.service";
 import { CreateChapterDto } from "./dto/create-chapter.dto";
 import { UpdateChapterDto } from "./dto/update-chapter.dto";
@@ -88,7 +88,9 @@ export class ChapterService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} chapter`;
+  async remove(where: Prisma.ChapterWhereUniqueInput): Promise<Chapter> {
+    return this.prisma.chapter.delete({
+      where,
+    });
   }
 }

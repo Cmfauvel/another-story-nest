@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
-import { Category } from "@prisma/client";
+import { Category, Prisma } from "@prisma/client";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { PrismaService } from "../../config/prisma/prisma.service";
 import { Params } from "../../helpers/models/filters";
@@ -14,7 +14,6 @@ export class CategoryService {
       cat = await this.prisma.category.create({
         data: data.category,
       });
-      //vérifier que l'utilisateur existe/a les droits
       return { catId: cat.id, code: 201, message: "success" };
     } catch (error) {
       throw new ConflictException(
@@ -42,7 +41,9 @@ export class CategoryService {
     return `This action updates a #${id} category`;
   } */
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(where: Prisma.CategoryWhereUniqueInput): Promise<Category> {
+    return this.prisma.category.delete({
+      where,
+    });
   }
 }

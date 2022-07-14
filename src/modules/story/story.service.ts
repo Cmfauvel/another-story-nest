@@ -66,6 +66,9 @@ export class StoryService {
         cursor,
         where,
         orderBy,
+        include: {
+          author: { select: { username: true } },
+        },
       });
     } catch (error) {
       throw new ConflictException(

@@ -2,8 +2,9 @@ import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/config/prisma/prisma.service";
 import { CreateCharacterDto } from "./dto/create-character.dto";
 import { Story } from "../story/entities/story.entity";
-import { Character } from "@prisma/client";
+import { Character, Prisma } from "@prisma/client";
 import { Params } from "../../helpers/models/filters";
+import { UpdateCharacterDto } from "./dto/update-character.dto";
 
 @Injectable()
 export class CharacterService {
@@ -46,11 +47,35 @@ export class CharacterService {
     });
   }
 
-  /* update(id: number, updateCharacterDto: UpdateCharacterDto) {
-    return `This action updates a #${id} character`;
-  } */
+  async update(data: { character: UpdateCharacterDto; storyId: string }, characterId: string) {
+    let character: Character;
+    try {
+      character = await this.prisma.character.update({
+        where: { id: characterId },
+        data: {
+          ...data.character,
+          story: {
+            connect: {
+              id: data.storyId,
+            },
+          },
+        },
+      });
+      return { characterId: character.id, code: 201, message: "success" };
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: "cannot update character",
+        },
+        HttpStatus.CONFLICT as unknown as string,
+      );
+    }
+  }
 
-  remove(id: number) {
-    return `This action removes a #${id} character`;
+  async remove(where: Prisma.CharacterWhereUniqueInput): Promise<Character> {
+    return this.prisma.character.delete({
+      where,
+    });
   }
 }

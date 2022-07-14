@@ -57,7 +57,10 @@ export class FollowsService {
     return `This action updates a #${id} follow`;
   } */
 
-  remove(id: number) {
-    return `This action removes a #${id} follow`;
+  async remove(params: Params): Promise<Follows> {
+    const { where } = params.filters;
+    return this.prisma.follows.delete({
+      where,
+    });
   }
 }

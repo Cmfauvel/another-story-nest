@@ -1,17 +1,20 @@
-import { Controller, Get, Post, Body, Param, Delete, Query } from "@nestjs/common";
+import { Controller, Request, Get, Post, Body, Param, Delete, Query, UseGuards, Patch } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacterDto } from "./dto/create-character.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { Story } from "../story/entities/story.entity";
 import { FiltersService } from "../../helpers/services/filters.service";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { UpdateCharacterDto } from "./dto/update-character.dto";
 
 @ApiTags("character")
 @Controller("character")
 export class CharacterController {
   constructor(private readonly characterService: CharacterService, private filtersService: FiltersService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() data: { character: CreateCharacterDto; story: Story }) {
+  create(@Request() _req, @Body() data: { character: CreateCharacterDto; story: Story }) {
     return this.characterService.create(data);
   }
 
@@ -26,13 +29,15 @@ export class CharacterController {
     return this.characterService.findAll({ filters: { where: { id: id } } });
   }
 
-  /* @Patch(":id")
-  update(@Param("id") id: string, @Body() updateCharacterDto: UpdateCharacterDto) {
-    return this.characterService.update(+id, updateCharacterDto);
-  } */
+  @UseGuards(JwtAuthGuard)
+  @Patch(":id")
+  update(@Param("id") id: string, @Request() _req, @Body() data: { character: UpdateCharacterDto; storyId: string }) {
+    return this.characterService.update(data, id);
+  }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.characterService.remove(+id);
+  remove(@Request() _req, @Param("id") id: string) {
+    return this.characterService.remove({ id: id });
   }
 }

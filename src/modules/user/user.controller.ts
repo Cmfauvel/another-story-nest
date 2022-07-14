@@ -1,8 +1,9 @@
-import { Controller, Get, Body, Patch, Param, Delete, Query } from "@nestjs/common";
+import { Controller, Request, Get, Body, Patch, Param, Delete, Query, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiTags } from "@nestjs/swagger";
 import { Prisma } from "@prisma/client";
 import { FiltersService } from "../../helpers/services/filters.service";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
 @ApiTags("users")
 @Controller("user")
@@ -15,21 +16,24 @@ export class UserController {
     return this.userService.findAll(parseFilters);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(":id")
-  findOne(@Param("id") id: string) {
+  findOne(@Request() _req, @Param("id") id: string) {
     return this.userService.findOne({ id: id });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateUserDto: Prisma.UserUpdateInput) {
+  update(@Request() _req, @Param("id") id: string, @Body() updateUserDto: Prisma.UserUpdateInput) {
     return this.userService.update({
       where: { id: id },
       data: updateUserDto,
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(":id")
-  remove(@Param("id") id: string) {
+  remove(@Request() _req, @Param("id") id: string) {
     return this.userService.remove({ id: id });
   }
 }

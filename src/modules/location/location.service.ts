@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
-import { Location } from "@prisma/client";
+import { Location, Prisma } from "@prisma/client";
 import { PrismaService } from "src/config/prisma/prisma.service";
 import { Story } from "../story/entities/story.entity";
 import { CreateLocationDto } from "./dto/create-location.dto";
@@ -73,7 +73,9 @@ export class LocationService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} location`;
+  async remove(where: Prisma.LocationWhereUniqueInput): Promise<Location> {
+    return this.prisma.location.delete({
+      where,
+    });
   }
 }
