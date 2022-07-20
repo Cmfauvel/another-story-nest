@@ -17,6 +17,7 @@ import * as winston from "winston";
 import { FiltersMiddleware } from "./middlewares/filters.middleware";
 import { PictureModule } from "./picture/picture.module";
 import { ImageModule } from "./modules/image/image.module";
+import { StoryHasCategoriesModule } from "./modules/story-has-categories/story-has-categories.module";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -51,6 +52,7 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
     AuthModule,
     PictureModule,
     ImageModule,
+    StoryHasCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
