@@ -29,12 +29,12 @@ export class CommentService {
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { commentId: comment.id, code: 201, message: "success" };
+      return { commentId: comment.id, code: 201, message: "Your comment has been posted." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create comment",
+          error: "An error occured when creating comment.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -71,12 +71,12 @@ export class CommentService {
           },
         },
       });
-      return { commentId: comment.id, code: 201, message: "success" };
+      return { commentId: comment.id, code: 201, message: "Your comment has been updated." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot update comment",
+          error: "An error occured when updating comment.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );

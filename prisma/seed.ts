@@ -1,16 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-//import { users } from '../users';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function main() {
-  /* for (const user of users) {
-    await prisma.user.create({ data: user });
-  } */
-}
+async function main() { }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.log(e);
     process.exit(1);
   })

@@ -16,16 +16,6 @@ export class AuthController {
   @ApiOkResponse({ type: Auth })
   async login(@Req() request, @Res({ passthrough: true }) response: Response) {
     const { accessToken, refreshToken } = await this.authService.login(request);
-    /*  
-    response.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 5,
-    });
-
-    response.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 120,
-    }); */
     return response.json({
       accessToken,
       accessTokenExpiresIn: 1000 * 60 * 5,

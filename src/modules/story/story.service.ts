@@ -23,8 +23,7 @@ export class StoryService {
           },
         },
       });
-      //vérifier que l'utilisateur existe/a les droits
-      return { storyId: story.id, code: 201, message: "success" };
+      return { storyId: story.id, code: 201, message: "Your story has been created." };
     } catch (error) {
       throw new ConflictException(
         {
@@ -49,7 +48,7 @@ export class StoryService {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create story",
+          error: "An error occured when creating story.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -57,7 +56,6 @@ export class StoryService {
   };
 
   async findAll(params: Params): Promise<Story[]> {
-    console.log(params, "here, in service");
     const { skip, take, cursor, where, orderBy } = params.filters;
     try {
       return this.prisma.story.findMany({
@@ -74,7 +72,7 @@ export class StoryService {
       throw new ConflictException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: "cannot find chapters",
+          error: "cannot find stories",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -92,15 +90,16 @@ export class StoryService {
             connect: {
               id: data.userId,
             },
+            //Fix categories here ?
           },
         },
       });
-      return { storyId: story.id, code: 201, message: "success" };
+      return { storyId: story.id, code: 201, message: "Your story has been updated." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot update story",
+          error: "An error occured when updating story.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );

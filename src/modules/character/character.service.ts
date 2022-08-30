@@ -24,12 +24,12 @@ export class CharacterService {
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { characterId: character.id, code: 201, message: "success" };
+      return { characterId: character.id, code: 201, message: "Character has been created." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create character",
+          error: "An error occured when creating character",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -61,12 +61,12 @@ export class CharacterService {
           },
         },
       });
-      return { characterId: character.id, code: 201, message: "success" };
+      return { characterId: character.id, code: 201, message: "Character has been updated." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot update character",
+          error: "An error occured when updating character",
         },
         HttpStatus.CONFLICT as unknown as string,
       );

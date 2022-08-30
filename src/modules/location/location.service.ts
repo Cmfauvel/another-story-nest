@@ -24,12 +24,12 @@ export class LocationService {
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { locationId: location.id, code: 201, message: "success" };
+      return { locationId: location.id, code: 201, message: "Location has been created." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create location",
+          error: "An error occured when creating location.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -61,12 +61,12 @@ export class LocationService {
           },
         },
       });
-      return { locationId: location.id, code: 201, message: "success" };
+      return { locationId: location.id, code: 201, message: "Location has been updated." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot update location",
+          error: "An error occured when updating location.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );

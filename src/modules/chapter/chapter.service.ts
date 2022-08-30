@@ -25,7 +25,7 @@ export class ChapterService {
           },
         });
         //vérifier que l'utilisateur existe/a les droits
-        return { chapterId: chapter.id, code: 201, message: "success" };
+        return { chapterId: chapter.id, code: 201, message: "Your chapter has been created." };
       } else {
         return { code: 409, message: "A chapter with this title already exists." };
       }
@@ -33,7 +33,7 @@ export class ChapterService {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create chapter",
+          error: "An error occured when creating chapter.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -76,12 +76,12 @@ export class ChapterService {
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { chapterId: chapter.id, code: 201, message: "success" };
+      return { chapterId: chapter.id, code: 201, message: "Your chapter has been updated." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot update chapter",
+          error: "An error occured when updating chapter.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );

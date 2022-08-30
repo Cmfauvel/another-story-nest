@@ -24,12 +24,12 @@ export class ImageService {
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { imageId: image.id, code: 201, message: "success" };
+      return { imageId: image.id, code: 201, message: "Your image has been posted." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create image",
+          error: "An error occured when creating image.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -49,7 +49,7 @@ export class ImageService {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create image",
+          error: "cannot find image",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -82,12 +82,12 @@ export class ImageService {
           },
         },
       });
-      return { imageId: image.id, code: 201, message: "success" };
+      return { imageId: image.id, code: 201, message: "Your image has been updated." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot update image",
+          error: "An error occured when creating/updating image",
         },
         HttpStatus.CONFLICT as unknown as string,
       );

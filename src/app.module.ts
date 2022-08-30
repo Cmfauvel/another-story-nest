@@ -15,7 +15,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { WinstonModule, utilities as nestWinstonModuleUtilities } from "nest-winston";
 import * as winston from "winston";
 import { FiltersMiddleware } from "./middlewares/filters.middleware";
-import { PictureModule } from "./picture/picture.module";
+import { PictureModule } from "./modules/picture/picture.module";
 import { ImageModule } from "./modules/image/image.module";
 import { StoryHasCategoriesModule } from "./modules/story-has-categories/story-has-categories.module";
 

@@ -10,6 +10,7 @@ import { User } from "../user/entities/user.entity";
 export class StoryHasCategoriesService {
   constructor(private prisma: PrismaService) {}
 
+  //FIX THIS SERVICE
   async create(data: { story: CreateStoryHasCategoriesDto; user: User }) {
     let story: Story;
     try {
@@ -24,7 +25,7 @@ export class StoryHasCategoriesService {
         },
       });
       //vérifier que l'utilisateur existe/a les droits
-      return { storyId: story.id, code: 201, message: "success" };
+      return { storyId: story.id, code: 201, message: "Your story has new categories." };
     } catch (error) {
       throw new ConflictException(
         {
@@ -49,7 +50,7 @@ export class StoryHasCategoriesService {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create story",
+          error: "Cannot find story.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -74,7 +75,7 @@ export class StoryHasCategoriesService {
       throw new ConflictException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: "cannot find chapters",
+          error: "cannot find stories",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
@@ -95,12 +96,12 @@ export class StoryHasCategoriesService {
           },
         },
       });
-      return { storyId: story.id, code: 201, message: "success" };
+      return { storyId: story.id, code: 201, message: "Your story has new categories." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot update story",
+          error: "An error occured when updating story.",
         },
         HttpStatus.CONFLICT as unknown as string,
       );

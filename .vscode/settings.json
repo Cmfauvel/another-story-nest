@@ -4,7 +4,7 @@
   },
   "[typescript]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
   // Add those two lines:
   /* "editor.formatOnSave": true, // Tell VSCode to format files on save

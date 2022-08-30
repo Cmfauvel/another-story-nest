@@ -92,7 +92,7 @@ export class AuthService {
         data,
       });
 
-      return { code: 201, message: "success" };
+      return { code: 201, message: "You are logged in." };
     } catch (error) {
       throw new ConflictException(
         {

@@ -14,12 +14,12 @@ export class CategoryService {
       cat = await this.prisma.category.create({
         data: data.category,
       });
-      return { catId: cat.id, code: 201, message: "success" };
+      return { catId: cat.id, code: 201, message: "Category has been created." };
     } catch (error) {
       throw new ConflictException(
         {
           status: HttpStatus.CONFLICT,
-          error: "cannot create category",
+          error: "An error occured when creating category",
         },
         HttpStatus.CONFLICT as unknown as string,
       );
