@@ -1,10 +1,10 @@
 {
   "name": "server",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "API another story",
+  "author": "Cmfauvel",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "Caroline Fauvel",
   "scripts": {
     "pre-commit": "lint-staged",
     "prebuild": "rimraf dist",
