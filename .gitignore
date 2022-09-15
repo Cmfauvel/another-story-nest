@@ -16,7 +16,9 @@ pids
 *.pid.lock
 *.yml 
 # before but not with actions
-*.yaml
+docker-compose.db.yml
+docker-compose.migrate.yml
+docker-compose.yml
 
 dbdata/
 

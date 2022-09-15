@@ -9,6 +9,8 @@
     "pre-commit": "lint-staged",
     "prebuild": "rimraf dist",
     "build": "nest build",
+    "build:prod": "NODE_ENV=prod nest build",
+    "build:dev": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

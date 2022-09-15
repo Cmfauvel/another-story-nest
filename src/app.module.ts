@@ -18,14 +18,19 @@ import { FiltersMiddleware } from "./middlewares/filters.middleware";
 import { PictureModule } from "./modules/picture/picture.module";
 import { ImageModule } from "./modules/image/image.module";
 import { StoryHasCategoriesModule } from "./modules/story-has-categories/story-has-categories.module";
+import configuration from "./config/configuration";
+import { getEnvPath } from "./helpers/env.helper";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+const envFilePath: string = getEnvPath(`${__dirname}/.envs`);
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [configuration],
+      envFilePath
     }),
     WinstonModule.forRootAsync({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

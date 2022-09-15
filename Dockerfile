@@ -5,12 +5,14 @@ WORKDIR /app
 
 COPY . .
 
+ENV NODE_ENV=${NODE_ENV}
+
 RUN yarn
-RUN yarn build
+CMD `yarn build:${NODE_ENV}`
 
-EXPOSE 1001
+EXPOSE ${PORT}
 
-ENV DATABASE_URL="postgresql://root:1234@postgres:5432/another_story"
+ENV DATABASE_URL=${DATABASE_URL}
 
 RUN chmod +x bin/start-up.sh
 #CMD node dist/main

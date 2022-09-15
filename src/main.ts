@@ -15,8 +15,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   app.use(cookieParser('zioin'));
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:4200',
+      'http://another-story.fr',
+      'https://another-story.fr'],
+    credentials: true
+  });
 
-  await app.listen(1001);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
