@@ -11,7 +11,8 @@ import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 @ApiTags("Stories")
 @Controller("stories")
 export class StoryController {
-  constructor(private readonly storyService: StoryService, private filtersService: FiltersService) {}
+  constructor(private readonly storyService: StoryService,
+    private filtersService: FiltersService) { }
 
   @Post()
   @ApiBody({ type: CreateStoryDto })

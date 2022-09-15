@@ -8,7 +8,8 @@ import { User } from "../user/entities/user.entity";
 
 @Injectable()
 export class StoryService {
-  constructor(private prisma: PrismaService) {}
+
+  constructor(private prisma: PrismaService) { }
 
   async create(data: { story: CreateStoryDto; user: User }) {
     let story: Story;
