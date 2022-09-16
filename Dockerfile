@@ -17,3 +17,5 @@ ENV DATABASE_URL=${DATABASE_URL}
 RUN chmod +x bin/start-up.sh
 #CMD node dist/main
 CMD bin/start-up.sh
+
+#watch for it
