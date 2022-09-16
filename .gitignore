@@ -14,7 +14,6 @@ pids
 *.pid
 *.seed
 *.pid.lock
-*.yml 
 # before but not with actions
 
 dbdata/
