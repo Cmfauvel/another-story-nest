@@ -9,7 +9,7 @@ import { UserService } from "../user/user.service";
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwtService: JwtService, private userService: UserService) {}
+  constructor(private prisma: PrismaService, private jwtService: JwtService, private userService: UserService) { }
 
   async logout(accessToken: string): Promise<void> {
     const { sub: id } = this.jwtService.decode(accessToken) as {
@@ -76,6 +76,20 @@ export class AuthService {
     };
   }
 
+  private checkPasswordValidity = (password: string): boolean => {
+    if (password.length > 8) {
+      //At lAt least One Upper Case Character
+      //At least one Lower Case character
+      //At least one digit
+      //At least one symbol/special character @$!%*#?&^_-
+      //Minimum 8 characters/digits
+      let regexp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&^_-]).{8,}/;
+      return regexp.test(password) ? true : false;
+    } else {
+      return false;
+    }
+  }
+
   async register({ username, email, password }) {
     let user;
     const hashedPassword = await hash(password, 8);
@@ -86,22 +100,33 @@ export class AuthService {
       refreshToken: "",
       refreshTokenExpires: "",
     };
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      user = await this.prisma.user.create({
-        data,
-      });
+    if (this.checkPasswordValidity(password)) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        user = await this.prisma.user.create({
+          data,
+        });
 
-      return { code: 201, message: "You are logged in." };
-    } catch (error) {
+        return { code: 201, message: "You are logged in." };
+      } catch (error) {
+        throw new ConflictException(
+          {
+            status: HttpStatus.CONFLICT,
+            error: "cannot register with this email",
+          },
+          HttpStatus.CONFLICT as unknown as string,
+        );
+      }
+    } else {
       throw new ConflictException(
         {
-          status: HttpStatus.CONFLICT,
-          error: "cannot register with this email",
+          status: HttpStatus.NOT_ACCEPTABLE,
+          error: "This password does not respect security rules",
         },
-        HttpStatus.CONFLICT as unknown as string,
+        HttpStatus.NOT_ACCEPTABLE as unknown as string,
       );
     }
+
   }
 
   async generateAccessToken(refreshToken) {

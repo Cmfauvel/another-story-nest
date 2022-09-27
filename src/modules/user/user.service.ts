@@ -6,7 +6,7 @@ import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   findOne = async (userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null> => {
     try {
@@ -32,23 +32,42 @@ export class UserService {
     } catch (error) {
       throw new ConflictException(
         {
-          status: HttpStatus.CONFLICT,
+          status: HttpStatus.NOT_FOUND,
           error: "cannot find user",
         },
-        HttpStatus.CONFLICT as unknown as string,
+        HttpStatus.NOT_FOUND as unknown as string,
       );
     }
   };
 
   async findAll(params: Params): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params.filters;
-    return this.prisma.user.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    try {
+      const users = await this.prisma.user.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+      });
+      return users.map(user => {
+        return {
+          id: user.id,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          email: user.email,
+          username: user.username
+        };
+      })
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: "cannot find users with those filters",
+        },
+        HttpStatus.NOT_FOUND as unknown as string,
+      );
+    }
   }
 
   async update(params: { where: Prisma.UserWhereUniqueInput; data: Prisma.UserUpdateInput }): Promise<User> {

@@ -6,11 +6,12 @@ import { Params } from "../../helpers/models/filters";
 
 @Injectable()
 export class FollowsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(data: { follower: User; following: User }) {
-    let follows: Follows;
+
     try {
+      let follows: Follows;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       follows = await this.prisma.follows.create({
         data: {
@@ -44,13 +45,27 @@ export class FollowsService {
 
   async findAll(params: Params): Promise<Follows[]> {
     const { skip, take, cursor, where, orderBy } = params.filters;
-    return this.prisma.follows.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    try {
+      let follows: Follows[];
+      follows = await this.prisma.follows.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+      });
+
+      return follows;
+
+    } catch (error) {
+      throw new ConflictException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: "cannot find follows with this filters",
+        },
+        HttpStatus.BAD_REQUEST as unknown as string,
+      );
+    }
   }
 
   /*  update(id: number, updateFollowDto: UpdateFollowDto) {
