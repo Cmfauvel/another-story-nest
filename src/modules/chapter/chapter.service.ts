@@ -7,12 +7,11 @@ import { Params } from "../../helpers/models/filters";
 
 @Injectable()
 export class ChapterService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
   async create(data: { chapter: CreateChapterDto; storyId: string }) {
     try {
       let chapter: Chapter;
-      const chapters: Chapter[] = await this.findAll({ filters: { where: { storyId: data.storyId, title: data.chapter.title } } });
-      console.log(chapters);
+      const chapters: Chapter[] = await (await this.findAll({ filters: { where: { storyId: data.storyId, title: data.chapter.title } } })).list;
       if (chapters.length === 0) {
         chapter = await this.prisma.chapter.create({
           data: {
@@ -40,16 +39,18 @@ export class ChapterService {
     }
   }
 
-  async findAll(params: Params): Promise<Chapter[]> {
+  async findAll(params: Params): Promise<{ list: Chapter[]; count: number }> {
     const { skip, take, cursor, where, orderBy } = params.filters;
     try {
-      return this.prisma.chapter.findMany({
+      let chapters;
+      chapters = this.prisma.chapter.findMany({
         skip,
         take,
         cursor,
         where,
         orderBy,
       });
+      return { list: chapters, count: chapters.length }
     } catch (error) {
       throw new ConflictException(
         {

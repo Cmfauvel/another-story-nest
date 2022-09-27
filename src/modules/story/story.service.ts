@@ -8,7 +8,7 @@ import { User } from "../user/entities/user.entity";
 
 @Injectable()
 export class StoryService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(data: { story: CreateStoryDto; user: User }) {
     let story: Story;
@@ -55,10 +55,11 @@ export class StoryService {
     }
   };
 
-  async findAll(params: Params): Promise<Story[]> {
+  async findAll(params: Params): Promise<{ list: Story[]; count: number }> {
     const { skip, take, cursor, where, orderBy } = params.filters;
     try {
-      return this.prisma.story.findMany({
+      let stories;
+      stories = this.prisma.story.findMany({
         skip,
         take,
         cursor,
@@ -68,6 +69,7 @@ export class StoryService {
           author: { select: { username: true } },
         },
       });
+      return { list: stories, count: stories.length }
     } catch (error) {
       throw new ConflictException(
         {
