@@ -92,6 +92,9 @@ export class AuthService {
 
   async register({ username, email, password }) {
     let user;
+    let userWithUsernameAlreadyExists = await this.prisma.user.findFirst({
+      where: { username: username },
+    });
     const hashedPassword = await hash(password, 8);
     const data = {
       username,
@@ -100,30 +103,40 @@ export class AuthService {
       refreshToken: "",
       refreshTokenExpires: "",
     };
-    if (this.checkPasswordValidity(password)) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        user = await this.prisma.user.create({
-          data,
-        });
+    if (!userWithUsernameAlreadyExists) {
+      if (this.checkPasswordValidity(password)) {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          user = await this.prisma.user.create({
+            data,
+          });
 
-        return { code: 201, message: "You are logged in." };
-      } catch (error) {
+          return { code: 201, message: "You are logged in." };
+        } catch (error) {
+          throw new ConflictException(
+            {
+              status: HttpStatus.CONFLICT,
+              error: "cannot register with this email",
+            },
+            HttpStatus.CONFLICT as unknown as string,
+          );
+        }
+      } else {
         throw new ConflictException(
           {
-            status: HttpStatus.CONFLICT,
-            error: "cannot register with this email",
+            status: HttpStatus.NOT_ACCEPTABLE,
+            error: "This password does not respect security rules",
           },
-          HttpStatus.CONFLICT as unknown as string,
+          HttpStatus.NOT_ACCEPTABLE as unknown as string,
         );
       }
     } else {
       throw new ConflictException(
         {
-          status: HttpStatus.NOT_ACCEPTABLE,
-          error: "This password does not respect security rules",
+          status: HttpStatus.CONFLICT,
+          error: "This username already exists",
         },
-        HttpStatus.NOT_ACCEPTABLE as unknown as string,
+        HttpStatus.CONFLICT as unknown as string,
       );
     }
 
