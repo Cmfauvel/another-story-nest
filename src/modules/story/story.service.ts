@@ -1,10 +1,11 @@
 import { ConflictException, HttpStatus, Injectable } from "@nestjs/common";
-import { Prisma, Story } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/config/prisma/prisma.service";
 import { CreateStoryDto } from "./dto/create-story.dto";
 import { Params } from "../../helpers/models/filters";
 import { UpdateStoryDto } from "./dto/update-story.dto";
 import { User } from "../user/entities/user.entity";
+import { Story } from "./entities/story.entity";
 
 @Injectable()
 export class StoryService {
@@ -58,8 +59,8 @@ export class StoryService {
   async findAll(params: Params): Promise<{ list: Story[]; count: number }> {
     const { skip, take, cursor, where, orderBy } = params.filters;
     try {
-      let stories;
-      stories = this.prisma.story.findMany({
+      let stories: any[];
+      stories = (await this.prisma.story.findMany({
         skip,
         take,
         cursor,
@@ -68,7 +69,7 @@ export class StoryService {
         include: {
           author: { select: { username: true } },
         },
-      });
+      })).flat();
       return { list: stories, count: stories.length }
     } catch (error) {
       throw new ConflictException(

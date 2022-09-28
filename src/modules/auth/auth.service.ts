@@ -47,9 +47,7 @@ export class AuthService {
 
   async login(request): Promise<Auth> {
     let user;
-    console.log("in login function :", request);
     const { email }: LoginDto = request.body;
-
     user = await this.prisma.user.findUnique({
       where: { email: email },
     });
@@ -58,14 +56,7 @@ export class AuthService {
       throw new UnauthorizedException("Dont find this user");
     }
 
-    /* const isSame = await compare(password, user.password);
-
-    if (!isSame) {
-      throw new UnauthorizedException("Invalid Login");
-    } */
-
     const payload = { sub: { userId: user.id, mail: email } };
-
     const accessToken = this.jwtService.sign(payload);
     const refreshMethod = await this.generateRefreshToken(user.id);
 
@@ -97,9 +88,7 @@ export class AuthService {
     });
     const hashedPassword = await hash(password, 8);
     const data = {
-      username,
-      email,
-      password: hashedPassword,
+      username, email, password: hashedPassword,
       refreshToken: "",
       refreshTokenExpires: "",
     };

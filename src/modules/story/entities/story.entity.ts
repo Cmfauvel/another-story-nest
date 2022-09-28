@@ -19,37 +19,34 @@ export class Story {
   type: Type;
 
   @ApiProperty()
-  typeId: number;
-
-  @ApiProperty()
   stars: number;
 
   @ApiProperty()
   authorId: string;
 
   @ApiProperty()
-  author: User;
+  author?: User;
 
   @ApiProperty()
   isPublic: boolean;
 
   @ApiProperty()
-  categories: Category[];
+  categories?: Category[];
 
   @ApiProperty()
-  chapters: Chapter[];
+  chapters?: Chapter[];
 
   @ApiProperty()
-  characters: Character[];
+  characters?: Character[];
 
   @ApiProperty()
-  locations: Location[];
+  locations?: Location[];
 
   @ApiProperty()
-  createdAt: Date;
+  createdAt?: Date;
 
   @ApiProperty()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   constructor(partial: Partial<Story>) {
     Object.assign(this, partial);

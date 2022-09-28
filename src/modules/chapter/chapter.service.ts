@@ -42,8 +42,8 @@ export class ChapterService {
   async findAll(params: Params): Promise<{ list: Chapter[]; count: number }> {
     const { skip, take, cursor, where, orderBy } = params.filters;
     try {
-      let chapters;
-      chapters = this.prisma.chapter.findMany({
+      let chapters: Chapter[];
+      chapters = await this.prisma.chapter.findMany({
         skip,
         take,
         cursor,

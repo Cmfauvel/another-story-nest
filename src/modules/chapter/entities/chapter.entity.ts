@@ -6,25 +6,25 @@ export class Chapter {
   id: string;
 
   @ApiProperty()
-  content: string;
+  content?: string;
 
   @ApiProperty()
-  resume: string;
+  resume?: string;
 
   @ApiProperty()
-  title: string;
+  title?: string;
 
   @ApiProperty()
-  storyId: string;
+  storyId?: string;
 
   @ApiProperty()
-  story: Story;
+  story?: Story;
 
   @ApiProperty()
-  createdAt: Date;
+  createdAt?: Date;
 
   @ApiProperty()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   constructor(partial: Partial<Chapter>) {
     Object.assign(this, partial);
