@@ -111,7 +111,7 @@ export class StoryService {
 
   async remove(where: Prisma.StoryWhereUniqueInput): Promise<Story> {
     return this.prisma.story.delete({
-      where,
+      where: where,
     });
   }
 }

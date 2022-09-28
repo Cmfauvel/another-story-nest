@@ -8,7 +8,7 @@ import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 @ApiTags("users")
 @Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService, private filtersService: FiltersService) {}
+  constructor(private readonly userService: UserService, private filtersService: FiltersService) { }
 
   @Get()
   findAll(@Query() params?: { filters?: string }) {

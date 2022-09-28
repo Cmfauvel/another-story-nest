@@ -9,6 +9,7 @@ export class UserService {
   constructor(private prisma: PrismaService) { }
 
   findOne = async (userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null> => {
+    console.log("------------------------ find one user", userWhereUniqueInput);
     try {
       const user = await this.prisma.user.findUnique({
         where: userWhereUniqueInput,
