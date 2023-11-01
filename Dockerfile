@@ -1,16 +1,16 @@
-FROM node:14.18.0
+FROM node:18.13.0
 
 RUN mkdir /app
 WORKDIR /app
 
 COPY . .
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build
 
 EXPOSE 1001
 
-ENV DATABASE_URL="postgresql://root:1234@postgres:5432/another_story"
+ENV DATABASE_URL="postgres://root:a6UmXVeGLK0hMnIBtmw4c1kjjRBQYavD@dpg-cl1707f5b13s73cmsla0-a/another_story"
 
 RUN chmod +x bin/start-up.sh
 #CMD node dist/main

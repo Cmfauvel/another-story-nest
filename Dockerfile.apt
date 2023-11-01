@@ -1,4 +1,4 @@
-FROM node:12.17.0-alpine As builder
+FROM node:18.13.0-alpine As builder
 # Create app directory
 WORKDIR /app
 
@@ -22,7 +22,7 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 1001
 CMD [ "npm", "run", "start:prod" ]
 
-FROM node:12.19.0-alpine3.9 AS development
+FROM node:18.13.0-alpine3.9 AS development
 
 WORKDIR /usr/src/app
 
